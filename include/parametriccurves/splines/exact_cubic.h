@@ -28,6 +28,9 @@
 
 #include <functional>
 #include <vector>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 
 namespace parametriccurves
 {
@@ -152,6 +155,13 @@ struct exact_cubic : public curve_abc<Time, Numeric, Dim, Safe, Point>
     }
 
     private:
+        friend class boost::serialization::access;
+        template<class Archive>
+        void serialize(Archive & ar, const unsigned int /* version */)
+        {
+          ar & subSplines_;
+        }
+
     //exact_cubic& operator=(const exact_cubic&);
 	/* Constructors - destructors */
 
@@ -197,7 +207,7 @@ struct exact_cubic : public curve_abc<Time, Numeric, Dim, Safe, Point>
 
 	/*Attributes*/
     public:
-    t_spline_t subSplines_; // const
+        t_spline_t subSplines_; // const
 	/*Attributes*/
 };
 }

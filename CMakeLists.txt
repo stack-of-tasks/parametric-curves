@@ -19,8 +19,8 @@ SET(CMAKE_VERBOSE_MAKEFILE True)
 
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
-
-SETUP_PROJECT()
+SET(BOOST_COMPONENTS unit_test_framework serialization)
+SEARCH_FOR_BOOST()
 
 OPTION (BUILD_PYTHON_INTERFACE "Build the python binding" OFF)
 IF(BUILD_PYTHON_INTERFACE)
@@ -28,14 +28,13 @@ IF(BUILD_PYTHON_INTERFACE)
 	FINDPYTHON(2.7 REQUIRED)
 	find_package( PythonLibs 2.7 REQUIRED )
 	include_directories( ${PYTHON_INCLUDE_DIRS} )
-
-	find_package( Boost COMPONENTS python REQUIRED )
-	include_directories( ${Boost_INCLUDE_DIR} )
+        SET(BOOST_COMPONENTS ${BOOST_COMPONENTS} python)
+	#include_directories( ${Boost_INCLUDE_DIR} )
 
 	add_subdirectory (python)
 
 ENDIF(BUILD_PYTHON_INTERFACE)
-
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 add_subdirectory (src/tests/spline_test)
 
 install(FILES
@@ -58,4 +57,5 @@ install(FILES
 #	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/helpers
 #	)
 
+SETUP_PROJECT()
 SETUP_PROJECT_FINALIZE()
