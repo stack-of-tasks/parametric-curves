@@ -1,9 +1,11 @@
 # Build and Release Folders
 bin/
 lib/
-build/
-build-rel/
+build*
+_build*
 
 # temp files
 .*~
 *.user
+*~
+*.pyc
