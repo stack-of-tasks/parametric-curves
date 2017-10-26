@@ -7,7 +7,7 @@
 *
 * This file contains math definitions used
 * used throughout the library.
-* Preprocessors definition are used to use eitheir float 
+* Preprocessors definition are used to use either float 
 * or double values, and 3 dimensional vectors for
 * the Point structure.
 */
@@ -21,7 +21,7 @@
 #include <vector>
 #include <utility> 
 
-namespace spline{
+namespace parametriccurves{
 	
 //REF: boulic et al An inverse kinematics architecture enforcing an arbitrary number of strict priority levels
 template<typename _Matrix_Type_>

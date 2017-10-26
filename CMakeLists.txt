@@ -1,12 +1,13 @@
-cmake_minimum_required(VERSION 2.6)
-project(spline)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
 INCLUDE(cmake/base.cmake)
+INCLUDE(cmake/boost.cmake)
+INCLUDE(cmake/eigen.cmake)
 INCLUDE(cmake/python.cmake)
 
-SET(PROJECT_NAME spline)
-SET(PROJECT_DESCRIPTION
-	 "template based classes for creating and manipulating spline and bezier curves. Comes with extra options specific to end-effector trajectories in robotics."
- )
+SET(PROJECT_NAME parametric-curves)
+SET(PROJECT_DESCRIPTION "Template based classes for creating and manipulating parametric curves. Comes with extra options specific to end-effector trajectories in robotics." )
+
 SET(PROJECT_URL "")
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/build/")
@@ -38,23 +39,23 @@ ENDIF(BUILD_PYTHON_INTERFACE)
 add_subdirectory (src/tests/spline_test)
 
 install(FILES
-	${CMAKE_SOURCE_DIR}/include/spline/bernstein.h
-	${CMAKE_SOURCE_DIR}/include/spline/curve_abc.h
-	${CMAKE_SOURCE_DIR}/include/spline/exact_cubic.h
-	${CMAKE_SOURCE_DIR}/include/spline/MathDefs.h
-	${CMAKE_SOURCE_DIR}/include/spline/polynom.h
-	${CMAKE_SOURCE_DIR}/include/spline/spline_deriv_constraint.h
-	${CMAKE_SOURCE_DIR}/include/spline/bezier_curve.h
-	${CMAKE_SOURCE_DIR}/include/spline/cubic_spline.h
-	${CMAKE_SOURCE_DIR}/include/spline/curve_constraint.h
-	${CMAKE_SOURCE_DIR}/include/spline/quintic_spline.h
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/spline
+#	${CMAKE_SOURCE_DIR}/include/parametriccurves/bernstein.h
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/curve_abc.h
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/exact_cubic.h
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/MathDefs.h
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/polynom.h
+#	${CMAKE_SOURCE_DIR}/include/parametriccurves/spline_deriv_constraint.h
+#	${CMAKE_SOURCE_DIR}/include/parametriccurves/bezier_curve.h
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/cubic_spline.h
+#	${CMAKE_SOURCE_DIR}/include/parametriccurves/curve_constraint.h
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/quintic_spline.h
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves
 	)
     
-install(FILES
-	${CMAKE_SOURCE_DIR}/include/spline/helpers/effector_spline.h
-	${CMAKE_SOURCE_DIR}/include/spline/helpers/effector_spline_rotation.h
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/spline/helpers
-	)
+#install(FILES
+#	${CMAKE_SOURCE_DIR}/include/parametriccurves/helpers/effector_spline.h
+#	${CMAKE_SOURCE_DIR}/include/parametriccurves/helpers/effector_spline_rotation.h
+#	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/helpers
+#	)
 
 SETUP_PROJECT_FINALIZE()

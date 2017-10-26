@@ -14,13 +14,15 @@
 #ifndef _STRUCT_QUINTIC_SPLINE
 #define _STRUCT_QUINTIC_SPLINE
 
-#include "MathDefs.h"
+//#include "MathDefs.h"
 
 #include "polynom.h"
 
 #include <stdexcept>
 
-namespace spline
+namespace parametriccurves
+{
+namespace splines
 {
 /// \brief Creates coefficient vector of a quintic spline defined on the interval
 /// [tBegin, tEnd]. It follows the equation
@@ -42,6 +44,7 @@ polynom<Time,Numeric,Dim,Safe,Point,T_Point> create_quintic(Point const& a, Poin
 {
     T_Point coeffs = make_quintic_vector<Point, T_Point>(a,b,c,d,e,f);
     return polynom<Time,Numeric,Dim,Safe,Point,T_Point>(coeffs.begin(),coeffs.end(), min, max);
+}
 }
 }
 #endif //_STRUCT_QUINTIC_SPLINE

@@ -14,17 +14,19 @@
 #ifndef _STRUCT_POLYNOM
 #define _STRUCT_POLYNOM
 
-#include "MathDefs.h"
+//#include "MathDefs.h"
 
-#include "curve_abc.h"
+#include "../curve_abc.h"
 
 #include <iostream>
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
-
-namespace spline
+namespace parametriccurves
 {
+namespace splines
+{
+
 /// \class polynom
 /// \brief Represents a polynomf arbitrary order defined on the interval
 /// [tBegin, tEnd]. It follows the equation
@@ -32,7 +34,7 @@ namespace spline
 ///
 template<typename Time= double, typename Numeric=Time, std::size_t Dim=3, bool Safe=false,
          typename Point= Eigen::Matrix<Numeric, Dim, 1>, typename T_Point =std::vector<Point,Eigen::aligned_allocator<Point> > >
-struct polynom : public curve_abc<Time, Numeric, Dim, Safe, Point>
+struct polynom : public parametriccurves::curve_abc<Time, Numeric, Dim, Safe, Point>
 {
     typedef Point 	point_t;
     typedef Time 	time_t;
@@ -198,6 +200,7 @@ struct polynom : public curve_abc<Time, Numeric, Dim, Safe, Point>
         return res;
     }
 }; //class polynom
+}
 }
 #endif //_STRUCT_POLYNOM
 

@@ -14,13 +14,15 @@
 #ifndef _STRUCT_CUBICSPLINE
 #define _STRUCT_CUBICSPLINE
 
-#include "MathDefs.h"
+//#include "MathDefs.h"
 
 #include "polynom.h"
 
 #include <stdexcept>
 
-namespace spline
+namespace parametriccurves
+{
+namespace splines
 {
 /// \brief Creates coefficient vector of a cubic spline defined on the interval
 /// [tBegin, tEnd]. It follows the equation
@@ -34,12 +36,14 @@ T_Point make_cubic_vector(Point const& a, Point const& b, Point const& c, Point 
     return res;
 }
 
-template<typename Time, typename Numeric, std::size_t Dim, bool Safe, typename Point, typename T_Point>
+template<typename Time, typename Numeric, std::size_t Dim,
+  bool Safe, typename Point, typename T_Point>
 polynom<Time,Numeric,Dim,Safe,Point,T_Point> create_cubic(Point const& a, Point const& b, Point const& c, Point const &d,
                const Time min, const Time max)
 {
     T_Point coeffs = make_cubic_vector<Point, T_Point>(a,b,c,d);
     return polynom<Time,Numeric,Dim,Safe,Point,T_Point>(coeffs.begin(),coeffs.end(), min, max);
+}
 }
 }
 #endif //_STRUCT_CUBICSPLINE

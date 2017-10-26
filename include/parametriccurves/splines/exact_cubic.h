@@ -8,10 +8,10 @@
 * This file contains definitions for the ExactCubic class.
 * Given a set of waypoints (x_i*) and timestep (t_i), it provides the unique set of
 * cubic splines fulfulling those 4 restrictions :
-* - x_i(t_i) = x_i* ; this means that the curve passes trough each waypoint
+* - x_i(t_i) = x_i* ; this means that the curve passes through each waypoint
 * - x_i(t_i+1) = x_i+1* ;
 * - its derivative is continous at t_i+1
-* - its acceleration is continous at t_i+1
+* - its 2nd derivative is continous at t_i+1
 * more details in paper "Task-Space Trajectories via Cubic Spline Optimization"
 * By J. Zico Kolter and Andrew Y.ng (ICRA 2009)
 */
@@ -20,16 +20,18 @@
 #ifndef _CLASS_EXACTCUBIC
 #define _CLASS_EXACTCUBIC
 
-#include "curve_abc.h"
+#include "../curve_abc.h"
 #include "cubic_spline.h"
 #include "quintic_spline.h"
 
-#include "MathDefs.h"
+#include "../MathDefs.h"
 
 #include <functional>
 #include <vector>
 
-namespace spline
+namespace parametriccurves
+{
+namespace splines
 {
 /// \class ExactCubic
 /// \brief Represents a set of cubic splines defining a continuous function 
@@ -134,7 +136,7 @@ struct exact_cubic : public curve_abc<Time, Numeric, Dim, Safe, Point>
         // adding last x
         x.row(size-1)= (*it).second.transpose();
         a= x;
-        PseudoInverse(h1);
+        parametriccurves::PseudoInverse(h1);
         b = h1 * h2 * x; //h1 * b = h2 * x => b = (h1)^-1 * h2 * x
         c = h3 * x + h4 * b;
         d = h5 * x + h6 * b;
@@ -198,6 +200,7 @@ struct exact_cubic : public curve_abc<Time, Numeric, Dim, Safe, Point>
     t_spline_t subSplines_; // const
 	/*Attributes*/
 };
+}
 }
 #endif //_CLASS_EXACTCUBIC
 

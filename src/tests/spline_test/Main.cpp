@@ -1,26 +1,29 @@
 
-#include "spline/exact_cubic.h"
-#include "spline/bezier_curve.h"
-#include "spline/polynom.h"
-#include "spline/spline_deriv_constraint.h"
-#include "spline/helpers/effector_spline.h"
-#include "spline/helpers/effector_spline_rotation.h"
-
+#include "parametriccurves/splines/exact_cubic.h"
+#include "parametriccurves/splines/polynom.h"
+/*#include "parametriccurves/bezier_curve.h"
+#include "parametriccurves/spline_deriv_constraint.h"
+#include "parametriccurves/helpers/effector_spline.h"
+#include "parametriccurves/helpers/effector_spline_rotation.h"
+*/
 #include <string>
 #include <iostream>
 #include <cmath>
 
 using namespace std;
 
-namespace spline
+namespace parametriccurves
+{
+namespace splines
 {
 typedef Eigen::Vector3d point_t;
 typedef std::vector<point_t,Eigen::aligned_allocator<point_t> >  t_point_t;
 typedef polynom  <double, double, 3, true, point_t, t_point_t> polynom_t;
 typedef exact_cubic <double, double, 3, true, point_t> exact_cubic_t;
-typedef spline_deriv_constraint <double, double, 3, true, point_t> spline_deriv_constraint_t;
+/*typedef spline_deriv_constraint <double, double, 3, true, point_t> spline_deriv_constraint_t;
 typedef bezier_curve  <double, double, 3, true, point_t> bezier_curve_t;
 typedef spline_deriv_constraint_t::spline_constraints spline_constraints_t;
+*/
 typedef std::pair<double, point_t> Waypoint;
 typedef std::vector<Waypoint> T_Waypoint;
 
@@ -45,9 +48,10 @@ bool QuasiEqual(const double a, const double b, const float margin)
 
 const double margin = 0.001;
 
-} // namespace spline
+} //namespace splines
+} // namespace paramtericcurves
 
-using namespace spline;
+using namespace parametriccurves::splines;
 
 ostream& operator<<(ostream& os, const point_t& pt)
 {
@@ -139,7 +143,7 @@ void CubicFunctionTest(bool& error)
 }
 
 /*bezier_curve Function tests*/
-
+/*
 void BezierCurveTest(bool& error)
 {
 	std::string errMsg("In test BezierCurveTest ; unexpected result for x ");
@@ -376,11 +380,11 @@ void BezierDerivativeCurveConstraintTest(bool& error)
     ComparePoints(constraints.end_acc, cf3.derivate(1.,2), errMsg, error);
 }
 
-
+*/
 /*Exact Cubic Function tests*/
 void ExactCubicNoErrorTest(bool& error)
 {
-	spline::T_Waypoint waypoints;
+	T_Waypoint waypoints;
 	for(double i = 0; i <= 1; i = i + 0.2)
 	{
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
@@ -426,7 +430,7 @@ void ExactCubicNoErrorTest(bool& error)
 /*Exact Cubic Function tests*/
 void ExactCubicTwoPointsTest(bool& error)
 {
-	spline::T_Waypoint waypoints;
+	T_Waypoint waypoints;
 	for(double i = 0; i < 2; ++i)
 	{
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
@@ -443,7 +447,7 @@ void ExactCubicTwoPointsTest(bool& error)
 
 void ExactCubicOneDimTest(bool& error)
 {
-	spline::T_WaypointOne waypoints;
+	T_WaypointOne waypoints;
 	point_one zero; zero(0,0) = 9;
 	point_one one; one(0,0) = 14;
 	point_one two; two(0,0) = 25;
@@ -460,7 +464,7 @@ void ExactCubicOneDimTest(bool& error)
 	ComparePoints(one, res1, errmsg, error);
 }
 
-void CheckWayPointConstraint(const std::string& errmsg, const double step, const spline::T_Waypoint& wayPoints, const exact_cubic_t* curve, bool& error )
+void CheckWayPointConstraint(const std::string& errmsg, const double step, const T_Waypoint& wayPoints, const exact_cubic_t* curve, bool& error )
 {
     point_t res1;
     for(double i = 0; i <= 1; i = i + step)
@@ -479,7 +483,7 @@ void CheckDerivative(const std::string& errmsg, const double eval_point, const s
 
 void ExactCubicPointsCrossedTest(bool& error)
 {
-	spline::T_Waypoint waypoints;
+	T_Waypoint waypoints;
 	for(double i = 0; i <= 1; i = i + 0.2)
 	{
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
@@ -489,10 +493,10 @@ void ExactCubicPointsCrossedTest(bool& error)
     CheckWayPointConstraint(errmsg, 0.2, waypoints, &exactCubic, error);
 
 }
-
+/*
 void ExactCubicVelocityConstraintsTest(bool& error)
 {
-    spline::T_Waypoint waypoints;
+    T_Waypoint waypoints;
     for(double i = 0; i <= 1; i = i + 0.2)
     {
         waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
@@ -524,7 +528,7 @@ void ExactCubicVelocityConstraintsTest(bool& error)
     CheckDerivative(errmsg4,0,2,constraints.init_acc,&exactCubic2, error);
     CheckDerivative(errmsg4,1,2,constraints.end_acc ,&exactCubic2, error);
 }
-
+*/
 void CheckPointOnline(const std::string& errmsg, const point_t& A, const point_t& B, const double target, const exact_cubic_t* curve, bool& error )
 {
     point_t res1 = curve->operator ()(target);
@@ -537,11 +541,11 @@ void CheckPointOnline(const std::string& errmsg, const point_t& A, const point_t
                      target << " ; " << res1.transpose() <<  std::endl;
     }
 }
-
+/*
 void EffectorTrajectoryTest(bool& error)
 {
     // create arbitrary trajectory
-    spline::T_Waypoint waypoints;
+    T_Waypoint waypoints;
     for(double i = 0; i <= 10; i = i + 2)
     {
         waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
@@ -598,7 +602,7 @@ double GetXRotFromQuat(helpers::quat_ref_const_t q)
 void EffectorSplineRotationNoRotationTest(bool& error)
 {
     // create arbitrary trajectory
-    spline::T_Waypoint waypoints;
+    T_Waypoint waypoints;
     for(double i = 0; i <= 10; i = i + 2)
     {
         waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
@@ -620,7 +624,7 @@ void EffectorSplineRotationNoRotationTest(bool& error)
 void EffectorSplineRotationRotationTest(bool& error)
 {
     // create arbitrary trajectory
-    spline::T_Waypoint waypoints;
+    T_Waypoint waypoints;
     for(double i = 0; i <= 10; i = i + 2)
     {
         waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
@@ -643,7 +647,7 @@ void EffectorSplineRotationRotationTest(bool& error)
 void EffectorSplineRotationWayPointRotationTest(bool& error)
 {
     // create arbitrary trajectory
-    spline::T_Waypoint waypoints;
+    T_Waypoint waypoints;
     for(double i = 0; i <= 10; i = i + 2)
     {
         waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
@@ -709,7 +713,7 @@ void TestReparametrization(bool& error)
         }
     }
 }
-
+*/
 int main(int /*argc*/, char** /*argv[]*/)
 {
     std::cout << "performing tests... \n";
@@ -728,7 +732,7 @@ int main(int /*argc*/, char** /*argv[]*/)
     BezierCurveTest(error);
     BezierDerivativeCurveTest(error);
     BezierDerivativeCurveConstraintTest(error);*/
-    BezierCurveTestCompareHornerAndBernstein(error);
+    //BezierCurveTestCompareHornerAndBernstein(error);
 	if(error)
 	{
         std::cout << "There were some errors\n";
