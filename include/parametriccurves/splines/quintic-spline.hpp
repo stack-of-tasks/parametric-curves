@@ -14,9 +14,7 @@
 #ifndef _STRUCT_QUINTIC_SPLINE
 #define _STRUCT_QUINTIC_SPLINE
 
-//#include "MathDefs.h"
-
-#include "polynom.h"
+#include "polynomial.hpp"
 
 #include <stdexcept>
 
