@@ -1,11 +1,11 @@
 cmake_minimum_required( VERSION 2.8 )
 
-include_directories("${EIGEN3_INCLUDE_DIR}")
+#include_directories("${EIGEN3_INCLUDE_DIR}")
 
 ADD_REQUIRED_DEPENDENCY("eigenpy")
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
-FILE(GLOB_RECURSE HeaderFiles "${PROJECT_SOURCE_DIR}/include/spline/*.h")
+FILE(GLOB_RECURSE HeaderFiles "${PROJECT_SOURCE_DIR}/include/parametriccurves/splines/*.hpp")
 
 # Define the wrapper library that wraps our library
 add_library( spline SHARED spline_python.cpp )
