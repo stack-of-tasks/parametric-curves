@@ -285,6 +285,8 @@ BOOST_PYTHON_MODULE(libcurves_pywrap)
             .def("max", &exact_cubic_t::tmax)
             .def("__call__", &exact_cubic_t::operator())
             .def("derivate", &exact_cubic_t::derivate)
+            .def("load_spline",&exact_cubic_t::loadSpline)
+            .def("save_spline",&exact_cubic_t::saveSpline)
         ;
     /** END bezier curve**/
 

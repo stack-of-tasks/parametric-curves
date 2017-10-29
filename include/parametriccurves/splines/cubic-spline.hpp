@@ -26,11 +26,12 @@
 #include "../MathDefs.h"
 
 #include <functional>
+#include <fstream>
 #include <vector>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
-
-
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/split_member.hpp>
 namespace parametriccurves
 {
 namespace splines
@@ -212,12 +213,64 @@ protected:
   t_spline_t subSplines_; // const
 
 private:
-  friend class boost::serialization::access;
+
+  // Serialization of the class
+  friend class boost::serialization::access;  
   template<class Archive>
-  void serialize(Archive & ar, const unsigned int /* version */)
+  void save(Archive & ar, const unsigned int /*version*/) const
   {
     ar & subSplines_;
+    /*    for(typename t_spline_t::iterator it = subSplines_.begin();
+        it != subSplines_.end(); ++it)
+        ar & boost::serialization::make_nvp("subSplines",*it);  */
+    return;
   }
+  
+  template<class Archive>
+  void load(Archive & ar, const unsigned int /*version*/)
+  {
+    ar & subSplines_;
+
+    /*    for(typename t_spline_t::iterator it = subSplines_.begin();
+        it != subSplines_.end(); ++it)
+        ar & boost::serialization::make_nvp("subSplines",*it); */
+    this->t_min = subSplines_.front().tmin();
+    this->t_max = subSplines_.back().tmax();
+    return;
+  }
+  
+  BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+public:
+  void loadSpline(const std::string & filename) throw (std::invalid_argument)
+  {
+    std::ifstream ifs(filename.c_str());
+    if(ifs) {
+      boost::archive::text_iarchive ia(ifs);
+      CubicSpline cubic_spline = *static_cast<CubicSpline*>(this);
+      ia >> cubic_spline;
+    }
+    else {
+      const std::string exception_message(filename + " does not seem to be a valid file.");
+      throw std::invalid_argument(exception_message);
+    }
+  }
+      
+  /// \brief Saved a Derived object as a text file.
+  void saveSpline(const std::string & filename) const throw (std::invalid_argument)
+  {
+    std::ofstream ofs(filename.c_str());
+    if(ofs) {
+      boost::archive::text_oarchive oa(ofs);
+      oa << *static_cast<const CubicSpline*>(this);
+    }
+    else {
+      const std::string exception_message(filename + " does not seem to be a valid file.");
+      throw std::invalid_argument(exception_message);
+    }
+  }
+
+  //BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 };
 }

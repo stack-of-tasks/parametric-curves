@@ -15,10 +15,12 @@
 #define _parameteric_curves_splines_polynomial_hpp
 
 #include "../abstract-curve.hpp"
+#include "../serialization/eigen-matrix.hpp"
 #include <Eigen/Dense>
 #include <vector>
 #include <stdexcept>
-
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 namespace parametriccurves
 {
@@ -71,6 +73,8 @@ public:
     {
       safe_check();
     }
+
+  Polynomial()  { }
 
     ///\brief Constructor
     ///\param zeroOrderCoefficient : an iterator pointing to the first element of a structure containing the coefficients
@@ -162,6 +166,31 @@ protected:
   std::size_t order_; //const
 
 private:
+
+  // Serialization of the class
+  friend class boost::serialization::access;  
+  template<class Archive>
+  void save(Archive & ar, const unsigned int /*version*/) const
+  {
+    ar & boost::serialization::make_nvp("dim",dim_);
+    ar & boost::serialization::make_nvp("order",order_);
+    ar & boost::serialization::make_nvp("coefficients",coefficients_);
+    ar & boost::serialization::make_nvp("t_min",this->t_min);
+    ar & boost::serialization::make_nvp("t_max",this->t_max);
+  }
+  
+  template<class Archive>
+  void load(Archive & ar, const unsigned int /*version*/)
+  {
+    ar & boost::serialization::make_nvp("dim",dim_);
+    ar & boost::serialization::make_nvp("order",order_);
+    ar & boost::serialization::make_nvp("coefficients",coefficients_);
+    ar & boost::serialization::make_nvp("t_min",this->t_min);
+    ar & boost::serialization::make_nvp("t_max",this->t_max);
+  }
+  
+  BOOST_SERIALIZATION_SPLIT_MEMBER()
+
   num_t fact(const std::size_t n, const std::size_t order) const
   {
     std::size_t res(1);

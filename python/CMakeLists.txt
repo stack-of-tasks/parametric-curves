@@ -1,24 +1,29 @@
 cmake_minimum_required( VERSION 2.8 )
 
-#include_directories("${EIGEN3_INCLUDE_DIR}")
+SET(PKG_CONFIG_PYWRAP_REQUIRES "eigenpy >= 1.3.1")
+FOREACH(dep ${PKG_CONFIG_PYWRAP_REQUIRES})
+  ADD_COMPILE_DEPENDENCY(${dep})
+ENDFOREACH(dep ${PKG_CONFIG_PYWRAP_REQUIRES})
 
-ADD_REQUIRED_DEPENDENCY("eigenpy")
+SET(${PYWRAP}_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${PYTHON_SITELIB}/${PROJECT_NAME})
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-FILE(GLOB_RECURSE HeaderFiles "${PROJECT_SOURCE_DIR}/include/parametriccurves/splines/*.hpp")
+SET(${PYWRAP}_HEADERS ""
+)
 
-# Define the wrapper library that wraps our library
-add_library( spline SHARED spline_python.cpp )
-#~ target_link_libraries( centroidal_dynamics ${Boost_LIBRARIES} ${PROJECT_NAME} )
-# don't prepend wrapper library name with lib
-set_target_properties( spline PROPERTIES PREFIX "" )
+SET(${PYWRAP}_SOURCES
+  spline_python.cpp
+)
+
+ADD_LIBRARY(${PYWRAP} SHARED ${${PYWRAP}_SOURCES} ${${PYWRAP}_HEADERS})
+PKG_CONFIG_USE_DEPENDENCY(${PYWRAP} eigenpy)
+
+#TARGET_LINK_LIBRARIES(${PYWRAP} ${PROJECT_NAME})
+TARGET_LINK_BOOST_PYTHON(${PYWRAP})
 
 IF(APPLE)
-	# We need to change the extension for python bindings
-	SET_TARGET_PROPERTIES(spline PROPERTIES SUFFIX ".so")
+  # We need to change the extension for python bindings
+  SET_TARGET_PROPERTIES(${PYWRAP} PROPERTIES SUFFIX ".so")
 ENDIF(APPLE)
-PKG_CONFIG_USE_DEPENDENCY(spline eigenpy)
 
-INSTALL(
-	FILES ${LIBRARY_OUTPUT_PATH}spline.so	DESTINATION ${PYTHON_SITELIB}
-)
+SET_TARGET_PROPERTIES(${PYWRAP} PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}")

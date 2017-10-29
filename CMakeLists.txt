@@ -42,6 +42,8 @@ install(FILES
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/cubic-spline.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/MathDefs.h
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/polynomial.hpp
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/eigen-matrix.hpp
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/archive.hpp
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/spline_deriv_constraint.h
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/bezier_curve.h
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/curve_constraint.h
@@ -55,7 +57,8 @@ install(FILES
 #	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/helpers
 #	)
 IF(BUILD_PYTHON_INTERFACE)
-  ADD_SUBDIRECTORY (python)
+  SET(PYWRAP ${PROJECT_NAME}_pywrap)
+  ADD_SUBDIRECTORY(python)
 ENDIF(BUILD_PYTHON_INTERFACE)
 
 ADD_SUBDIRECTORY (src/tests/spline_test)
