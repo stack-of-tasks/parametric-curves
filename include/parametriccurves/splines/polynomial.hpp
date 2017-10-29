@@ -84,8 +84,9 @@ public:
     ///\param max: UPPER bound on interval definition of the spline
     template<typename In>
     Polynomial(In zeroOrderCoefficient, In out, const time_t tmin, const time_t tmax)
-      :coefficients_(init_coeffs(zeroOrderCoefficient, out)),
-       dim_(Dim), order_(coefficients_.cols()-1)
+      : curve_abc_t(tmin, tmax),
+        coefficients_(init_coeffs(zeroOrderCoefficient, out)),
+        dim_(Dim), order_(coefficients_.cols()-1)
     {
       safe_check();
     }

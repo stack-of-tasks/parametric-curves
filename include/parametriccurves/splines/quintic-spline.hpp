@@ -46,4 +46,3 @@ polynom<Time,Numeric,Dim,Safe,Point,T_Point> create_quintic(Point const& a, Poin
 }
 }
 #endif //_STRUCT_QUINTIC_SPLINE
-

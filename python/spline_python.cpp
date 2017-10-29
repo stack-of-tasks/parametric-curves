@@ -152,6 +152,11 @@ exact_cubic_t* wrapExactCubicConstructor(const coeff_t& array, const time_waypoi
     return new exact_cubic_t(wps.begin(), wps.end());
 }
 
+exact_cubic_t* wrapExactCubicConstructorvoid()
+{
+    return new exact_cubic_t();
+}
+
   /*
 spline_deriv_constraint_t* wrapSplineDerivConstraint(const coeff_t& array, const time_waypoints_t& time_wp, const curve_constraints_t& constraints)
 {
@@ -207,7 +212,7 @@ void set_end_acc(curve_constraints_t& c, const point_t& val)
 */
 
 
-BOOST_PYTHON_MODULE(libcurves_pywrap)
+BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
 {
     /** BEGIN eigenpy init**/
     eigenpy::enableEigenPy();
@@ -267,7 +272,7 @@ BOOST_PYTHON_MODULE(libcurves_pywrap)
 
 
     /** BEGIN spline curve function**/
-    class_<polynom_t>("polynom",  init<const polynom_t::coeff_t, const real, const real >())
+    class_<polynom_t>("polynomial",  init<const polynom_t::coeff_t, const real, const real >())
             .def("__init__", make_constructor(&wrapSplineConstructor))
             .def("min", &polynom_t::tmin)
             .def("max", &polynom_t::tmax)
@@ -279,14 +284,15 @@ BOOST_PYTHON_MODULE(libcurves_pywrap)
 
     /** BEGIN exact_cubic curve**/
     class_<exact_cubic_t>
-        ("exact_cubic", no_init)
+        ("cubic_spline", no_init)
             .def("__init__", make_constructor(&wrapExactCubicConstructor))
+            .def("__init__", make_constructor(&wrapExactCubicConstructorvoid))
             .def("min", &exact_cubic_t::tmin)
             .def("max", &exact_cubic_t::tmax)
             .def("__call__", &exact_cubic_t::operator())
             .def("derivate", &exact_cubic_t::derivate)
-            .def("load_spline",&exact_cubic_t::loadSpline)
-            .def("save_spline",&exact_cubic_t::saveSpline)
+            .def("load_spline",&exact_cubic_t::loadSpline,boost::python::args("filename"),"Loads *this")
+            .def("save_spline",&exact_cubic_t::saveSpline,boost::python::args("filename"),"Saves *this")
         ;
     /** END bezier curve**/
 

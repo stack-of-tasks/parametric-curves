@@ -93,6 +93,11 @@ public:
     this->t_min = subSplines_.front().tmin();
     this->t_max = subSplines_.back().tmax();
   }
+  CubicSpline()
+    : curve_abc_t()
+  {
+  }
+
   ///\brief Constructor
   ///\param subSplines: vector of subsplines
   CubicSpline(const t_spline_t& subSplines)
@@ -205,8 +210,8 @@ public:
   }
 
   /*Getters*/
-  virtual const time_t tmin() const {return subSplines_.front().tmin();}
-  virtual const time_t tmax() const {return subSplines_.back().tmax();}
+  virtual const time_t tmin() const {return this->t_min;}
+  virtual const time_t tmax() const {return this->t_max;}
 
 protected:
   /*Attributes*/
@@ -220,9 +225,7 @@ private:
   void save(Archive & ar, const unsigned int /*version*/) const
   {
     ar & subSplines_;
-    /*    for(typename t_spline_t::iterator it = subSplines_.begin();
-        it != subSplines_.end(); ++it)
-        ar & boost::serialization::make_nvp("subSplines",*it);  */
+
     return;
   }
   
@@ -231,9 +234,6 @@ private:
   {
     ar & subSplines_;
 
-    /*    for(typename t_spline_t::iterator it = subSplines_.begin();
-        it != subSplines_.end(); ++it)
-        ar & boost::serialization::make_nvp("subSplines",*it); */
     this->t_min = subSplines_.front().tmin();
     this->t_max = subSplines_.back().tmax();
     return;
@@ -247,7 +247,7 @@ public:
     std::ifstream ifs(filename.c_str());
     if(ifs) {
       boost::archive::text_iarchive ia(ifs);
-      CubicSpline cubic_spline = *static_cast<CubicSpline*>(this);
+      CubicSpline& cubic_spline = *static_cast<CubicSpline*>(this);
       ia >> cubic_spline;
     }
     else {
