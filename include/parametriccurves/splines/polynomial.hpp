@@ -14,8 +14,8 @@
 #ifndef _parameteric_curves_splines_polynomial_hpp
 #define _parameteric_curves_splines_polynomial_hpp
 
-#include "../abstract-curve.hpp"
-#include "../serialization/eigen-matrix.hpp"
+#include <parametriccurves/abstract-curve.hpp>
+#include <parametriccurves/serialization/eigen-matrix.hpp>
 #include <Eigen/Dense>
 #include <vector>
 #include <stdexcept>

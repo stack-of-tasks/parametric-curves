@@ -46,23 +46,26 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 install(FILES
 #	${CMAKE_SOURCE_DIR}/include/parametriccurves/bernstein.h
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/abstract-curve.hpp
-	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/cubic-spline.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/MathDefs.h
-	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/polynomial.hpp
-	${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/eigen-matrix.hpp
-	${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/archive.hpp
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/spline_deriv_constraint.h
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/bezier_curve.h
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/curve_constraint.h
-	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/quintic-spline.hpp
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves
 	)
     
-#install(FILES
-#	${CMAKE_SOURCE_DIR}/include/parametriccurves/helpers/effector_spline.h
-#	${CMAKE_SOURCE_DIR}/include/parametriccurves/helpers/effector_spline_rotation.h
-#	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/helpers
-#	)
+install(FILES
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/cubic-spline.hpp
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/polynomial.hpp
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/quintic-spline.hpp
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/splines
+	)
+
+install(FILES
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/eigen-matrix.hpp
+	#${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/archive.hpp
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/serialization
+        )
+
 IF(BUILD_PYTHON_INTERFACE)
   SET(PYWRAP ${PROJECT_NAME}_pywrap)
   ADD_SUBDIRECTORY(python)

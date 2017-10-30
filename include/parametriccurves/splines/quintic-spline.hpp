@@ -14,7 +14,7 @@
 #ifndef _STRUCT_QUINTIC_SPLINE
 #define _STRUCT_QUINTIC_SPLINE
 
-#include "polynomial.hpp"
+#include <parametriccurves/splines/polynomial.hpp>
 
 #include <stdexcept>
 

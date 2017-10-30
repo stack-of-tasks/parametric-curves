@@ -20,10 +20,10 @@
 #ifndef _parameteric_curves_splines_cubic_splines_hpp
 #define _parameteric_curves_splines_cubic_splines_hpp
 
-#include "../abstract-curve.hpp"
+#include <parametriccurves/abstract-curve.hpp>
 //#include "quintic_spline.h"
-#include "polynomial.hpp"
-#include "../MathDefs.h"
+#include <parametriccurves/splines/polynomial.hpp>
+#include <parametriccurves/MathDefs.h>
 
 #include <functional>
 #include <fstream>
