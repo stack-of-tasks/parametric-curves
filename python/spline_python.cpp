@@ -1,9 +1,9 @@
 //#include "parametriccurves/bezier_curve.h"
-#include "parametriccurves/polynomial.hpp"
-#include "parametriccurves/spline.hpp"
+#include <parametriccurves/polynomial.hpp>
+#include <parametriccurves/spline.hpp>
 
 //#include "parametriccurves/splines/spline_deriv_constraint.h"
-//#include "parametriccurves/splines/curve_constraint.h"
+#include <parametriccurves/curve-constraint.hpp>
 
 #include <vector>
 
@@ -45,8 +45,8 @@ typedef std::vector<waypoint_t, Eigen::aligned_allocator<point_t> > t_waypoint_t
 
 
 //typedef spline::spline_deriv_constraint  <real, real, 3, true, point_t, t_point_t> spline_deriv_constraint_t;
-//typedef spline::curve_constraints<point_t> curve_constraints_t;
-//typedef spline::curve_constraints<point6_t> curve_constraints6_t;
+typedef parametriccurves::curve_constraints<point_t> curve_constraints_t;
+typedef parametriccurves::curve_constraints<point6_t> curve_constraints6_t;
 /*** TEMPLATE SPECIALIZATION FOR PYTHON ****/
 
 //EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(bezier_t)
@@ -54,7 +54,7 @@ typedef std::vector<waypoint_t, Eigen::aligned_allocator<point_t> > t_waypoint_t
 EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(polynom_t)
 EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(spline_t)
 
-//EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(curve_constraints_t)
+EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(curve_constraints_t)
 //EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(spline_deriv_constraint_t)
 
 namespace parametriccurves
@@ -154,7 +154,7 @@ void spline_from_waypoints(spline_t& self, const coeff_t& array,
                                  const time_waypoints_t& time_wp)
 {
     t_waypoint_t wps = getWayPoints(array, time_wp);
-    self.createCubicSplineFromWayPoints(wps.begin(), wps.end());
+    self.createSplineFromWayPoints(wps.begin(), wps.end());
     return;
 }
 
@@ -179,17 +179,13 @@ spline_t* wrapExactCubicConstructorPolySequence(const bp::list&
   return new spline_t(subSplines);
 }
 
-  /*
-spline_deriv_constraint_t* wrapSplineDerivConstraint(const coeff_t& array, const time_waypoints_t& time_wp, const curve_constraints_t& constraints)
+void spline_from_waypoints_constr(spline_t& self, const coeff_t& array,
+                                  const time_waypoints_t& time_wp, 
+                                  const curve_constraints_t& constraints)
 {
     t_waypoint_t wps = getWayPoints(array, time_wp);
-    return new spline_deriv_constraint_t(wps.begin(), wps.end(),constraints);
-}
-
-spline_deriv_constraint_t* wrapSplineDerivConstraintNoConstraints(const coeff_t& array, const time_waypoints_t& time_wp)
-{
-    t_waypoint_t wps = getWayPoints(array, time_wp);
-    return new spline_deriv_constraint_t(wps.begin(), wps.end());
+    self.createSplineFromWayPointsConstr(wps.begin(), wps.end(), constraints);
+    return;
 }
 
 point_t get_init_vel(const curve_constraints_t& c)
@@ -231,7 +227,6 @@ void set_end_acc(curve_constraints_t& c, const point_t& val)
 {
     c.end_acc = val;
 }
-*/
 
 
 BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
@@ -313,9 +308,12 @@ BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
             .def("max", &spline_t::tmax)
             .def("__call__", &spline_t::operator())
             .def("derivate", &spline_t::derivate)
-            .def("create_cubic_spline_from_waypoints", &spline_from_waypoints,
+            .def("create_spline_from_waypoints", &spline_from_waypoints,
                  boost::python::args("waypoints", "time vector"),
                  "Creates a cubic spline from a set of way points")
+            .def("create_spline_from_waypoints_constr", &spline_from_waypoints_constr,
+                 boost::python::args("waypoints", "time vector", "constraints"),
+                 "Creates a spline from a set of way points and constraints")
             .def("load_spline",&spline_t::loadSpline,boost::python::args("filename"),"Loads *this")
             .def("save_spline",&spline_t::saveSpline,boost::python::args("filename"),"Saves *this")
         ;
@@ -323,7 +321,6 @@ BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
 
 
     /** BEGIN curve constraints**/
-    /*
     class_<curve_constraints_t>
         ("curve_constraints", init<>())
             .add_property("init_vel", &get_init_vel, &set_init_vel)
@@ -331,24 +328,7 @@ BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
             .add_property("end_vel", &get_end_vel, &set_end_vel)
             .add_property("end_acc", &get_end_acc, &set_end_acc)
         ;
-    */
     /** END curve constraints**/
-
-
-    /** BEGIN spline_deriv_constraints**/
-    /*
-    class_<spline_deriv_constraint_t>
-        ("spline_deriv_constraint", no_init)
-            .def("__init__", make_constructor(&wrapSplineDerivConstraint))
-            .def("__init__", make_constructor(&wrapSplineDerivConstraintNoConstraints))
-            .def("min", &spline_t::min)
-            .def("max", &spline_t::max)
-            .def("__call__", &spline_t::operator())
-            .def("derivate", &spline_t::derivate)
-        ;
-    */
-    /** END spline_deriv_constraints**/
-
 
 }
 } // namespace parametriccurves

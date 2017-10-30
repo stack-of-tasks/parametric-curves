@@ -19,8 +19,8 @@ typedef Polynomial  <double, 3, point_t, t_point_t> polynom_t;
 typedef Spline <double, 3, point_t> Spline_t;
 /*typedef spline_deriv_constraint <double, double, 3, true, point_t> spline_deriv_constraint_t;
   typedef bezier_curve  <double, double, 3, true, point_t> bezier_curve_t;
-  typedef spline_deriv_constraint_t::spline_constraints spline_constraints_t;
 */
+typedef Spline_t::spline_constraints spline_constraints_t;
 typedef std::pair<double, point_t> Waypoint;
 typedef std::vector<Waypoint> T_Waypoint;
 
@@ -384,7 +384,7 @@ void ExactCubicNoErrorTest(bool& error)
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
 	}
 	Spline_t exactCubic;
-        exactCubic.createCubicSplineFromWayPoints(waypoints.begin(), waypoints.end());
+        exactCubic.createSplineFromWayPoints(waypoints.begin(), waypoints.end());
 	point_t res1;
 	try
 	{
@@ -431,7 +431,7 @@ void ExactCubicTwoPointsTest(bool& error)
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
 	}
 	Spline_t exactCubic;
-        exactCubic.createCubicSplineFromWayPoints(waypoints.begin(), waypoints.end());
+        exactCubic.createSplineFromWayPoints(waypoints.begin(), waypoints.end());
 	
 	point_t res1 = exactCubic(0);
 	std::string errmsg("in ExactCubic 2 points Error While checking that given wayPoints  are crossed (expected / obtained)");
@@ -451,7 +451,7 @@ void ExactCubicOneDimTest(bool& error)
 	waypoints.push_back(std::make_pair(1., one));
 	waypoints.push_back(std::make_pair(2., two));
 	Spline_one exactCubic;
-        exactCubic.createCubicSplineFromWayPoints(waypoints.begin(), waypoints.end());
+        exactCubic.createSplineFromWayPoints(waypoints.begin(), waypoints.end());
 	
 	point_one res1 = exactCubic(0);
 	std::string errmsg("in ExactCubicOneDim Error While checking that given wayPoints  are crossed (expected / obtained)");
@@ -486,12 +486,11 @@ void ExactCubicPointsCrossedTest(bool& error)
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
 	}
     Spline_t exactCubic;
-    exactCubic.createCubicSplineFromWayPoints(waypoints.begin(), waypoints.end());
+    exactCubic.createSplineFromWayPoints(waypoints.begin(), waypoints.end());
     std::string errmsg("Error While checking that given wayPoints are crossed (expected / obtained)");
     CheckWayPointConstraint(errmsg, 0.2, waypoints, &exactCubic, error);
 
 }
-/*
 void ExactCubicVelocityConstraintsTest(bool& error)
 {
     T_Waypoint waypoints;
@@ -501,7 +500,8 @@ void ExactCubicVelocityConstraintsTest(bool& error)
     }
     std::string errmsg("Error in ExactCubicVelocityConstraintsTest (1); while checking that given wayPoints are crossed (expected / obtained)");
     spline_constraints_t constraints;
-    spline_deriv_constraint_t exactCubic(waypoints.begin(), waypoints.end());
+    Spline_t exactCubic;
+    exactCubic.createSplineFromWayPoints(waypoints.begin(), waypoints.end());
     // now check that init and end velocity are 0
     CheckWayPointConstraint(errmsg, 0.2, waypoints, &exactCubic, error);
     std::string errmsg3("Error in ExactCubicVelocityConstraintsTest (2); while checking derivative (expected / obtained)");
@@ -516,7 +516,8 @@ void ExactCubicVelocityConstraintsTest(bool& error)
     constraints.end_acc = point_t(4,5,6);
     constraints.init_acc = point_t(-4,-4,-6);
     std::string errmsg2("Error in ExactCubicVelocityConstraintsTest (3); while checking that given wayPoints are crossed (expected / obtained)");
-    spline_deriv_constraint_t exactCubic2(waypoints.begin(), waypoints.end(),constraints);
+    Spline_t exactCubic2;
+    exactCubic2.createSplineFromWayPointsConstr(waypoints.begin(), waypoints.end(), constraints);
     CheckWayPointConstraint(errmsg2, 0.2, waypoints, &exactCubic2, error);
 
     std::string errmsg4("Error in ExactCubicVelocityConstraintsTest (4); while checking derivative (expected / obtained)");
@@ -526,7 +527,6 @@ void ExactCubicVelocityConstraintsTest(bool& error)
     CheckDerivative(errmsg4,0,2,constraints.init_acc,&exactCubic2, error);
     CheckDerivative(errmsg4,1,2,constraints.end_acc ,&exactCubic2, error);
 }
-*/
 void CheckPointOnline(const std::string& errmsg, const point_t& A, const point_t& B, const double target, const Spline_t* curve, bool& error )
 {
     point_t res1 = curve->operator ()(target);

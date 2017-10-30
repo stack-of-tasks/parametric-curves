@@ -12,12 +12,12 @@
 #ifndef _CLASS_CURVE_CONSTRAINT
 #define _CLASS_CURVE_CONSTRAINT
 
-#include "MathDefs.h"
+#include <parametriccurves/MathDefs.h>
 
 #include <functional>
 #include <vector>
 
-namespace spline
+namespace parametriccurves
 {
 template <typename Point>
 struct curve_constraints
