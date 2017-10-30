@@ -75,9 +75,10 @@ struct CubicSpline :
   typedef Numeric 	time_t;
   typedef Numeric	num_t;
   typedef SplineBase spline_t;
-  typedef typename std::vector<spline_t> t_spline_t;
+  typedef typename std::vector<spline_t,Eigen::aligned_allocator<spline_t> > t_spline_t;
   typedef typename t_spline_t::iterator it_spline_t;
   typedef typename t_spline_t::const_iterator cit_spline_t;
+
   typedef AbstractCurve<Numeric, Point> curve_abc_t;
 
 public:
@@ -100,7 +101,7 @@ public:
 
   ///\brief Constructor
   ///\param subSplines: vector of subsplines
-  CubicSpline(const t_spline_t& subSplines)
+  CubicSpline(const t_spline_t &subSplines)
     : curve_abc_t(subSplines.front().tmin(), subSplines.back().tmax()),
       subSplines_(subSplines) {}
 
@@ -113,6 +114,7 @@ public:
   ~CubicSpline(){}
   
 private:
+
   template<typename In>
   t_spline_t computeWayPoints(In wayPointsBegin, In wayPointsEnd) const
   {
