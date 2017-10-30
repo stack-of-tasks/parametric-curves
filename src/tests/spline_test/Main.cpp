@@ -18,7 +18,7 @@ namespace splines
 typedef Eigen::Vector3d point_t;
 typedef std::vector<point_t,Eigen::aligned_allocator<point_t> >  t_point_t;
 typedef Polynomial  <double, 3, point_t, t_point_t> polynom_t;
-typedef CubicSpline <double, 3, point_t> CubicSpline_t;
+typedef Spline <double, 3, point_t> Spline_t;
 /*typedef spline_deriv_constraint <double, double, 3, true, point_t> spline_deriv_constraint_t;
   typedef bezier_curve  <double, double, 3, true, point_t> bezier_curve_t;
   typedef spline_deriv_constraint_t::spline_constraints spline_constraints_t;
@@ -29,7 +29,7 @@ typedef std::vector<Waypoint> T_Waypoint;
 
 typedef Eigen::Matrix<double,1,1> point_one;
 typedef Polynomial<double, 1, point_one> polynom_one;
-typedef CubicSpline   <double, 1, point_one> CubicSpline_one;
+typedef Spline   <double, 1, point_one> Spline_one;
 typedef std::pair<double, point_one> WaypointOne;
 typedef std::vector<WaypointOne> T_WaypointOne;
 
@@ -388,7 +388,8 @@ void ExactCubicNoErrorTest(bool& error)
 	{
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
 	}
-	CubicSpline_t exactCubic(waypoints.begin(), waypoints.end());
+	Spline_t exactCubic;
+        exactCubic.createCubicSplineFromWayPoints(waypoints.begin(), waypoints.end());
 	point_t res1;
 	try
 	{
@@ -434,7 +435,8 @@ void ExactCubicTwoPointsTest(bool& error)
 	{
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
 	}
-	CubicSpline_t exactCubic(waypoints.begin(), waypoints.end());
+	Spline_t exactCubic;
+        exactCubic.createCubicSplineFromWayPoints(waypoints.begin(), waypoints.end());
 	
 	point_t res1 = exactCubic(0);
 	std::string errmsg("in ExactCubic 2 points Error While checking that given wayPoints  are crossed (expected / obtained)");
@@ -453,7 +455,8 @@ void ExactCubicOneDimTest(bool& error)
 	waypoints.push_back(std::make_pair(0., zero));
 	waypoints.push_back(std::make_pair(1., one));
 	waypoints.push_back(std::make_pair(2., two));
-	CubicSpline_one exactCubic(waypoints.begin(), waypoints.end());
+	Spline_one exactCubic;
+        exactCubic.createCubicSplineFromWayPoints(waypoints.begin(), waypoints.end());
 	
 	point_one res1 = exactCubic(0);
 	std::string errmsg("in ExactCubicOneDim Error While checking that given wayPoints  are crossed (expected / obtained)");
@@ -463,7 +466,7 @@ void ExactCubicOneDimTest(bool& error)
 	ComparePoints(one, res1, errmsg, error);
 }
 
-void CheckWayPointConstraint(const std::string& errmsg, const double step, const T_Waypoint& wayPoints, const CubicSpline_t* curve, bool& error )
+void CheckWayPointConstraint(const std::string& errmsg, const double step, const T_Waypoint& wayPoints, const Spline_t* curve, bool& error )
 {
     point_t res1;
     for(double i = 0; i <= 1; i = i + step)
@@ -473,7 +476,7 @@ void CheckWayPointConstraint(const std::string& errmsg, const double step, const
     }
 }
 
-void CheckDerivative(const std::string& errmsg, const double eval_point, const std::size_t order, const point_t& target, const CubicSpline_t* curve, bool& error )
+void CheckDerivative(const std::string& errmsg, const double eval_point, const std::size_t order, const point_t& target, const Spline_t* curve, bool& error )
 {
     point_t res1 = curve->derivate(eval_point,order);
     ComparePoints(target, res1, errmsg, error);
@@ -487,7 +490,8 @@ void ExactCubicPointsCrossedTest(bool& error)
 	{
 		waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
 	}
-    CubicSpline_t exactCubic(waypoints.begin(), waypoints.end());
+    Spline_t exactCubic;
+    exactCubic.createCubicSplineFromWayPoints(waypoints.begin(), waypoints.end());
     std::string errmsg("Error While checking that given wayPoints are crossed (expected / obtained)");
     CheckWayPointConstraint(errmsg, 0.2, waypoints, &exactCubic, error);
 
@@ -528,7 +532,7 @@ void ExactCubicVelocityConstraintsTest(bool& error)
     CheckDerivative(errmsg4,1,2,constraints.end_acc ,&exactCubic2, error);
 }
 */
-void CheckPointOnline(const std::string& errmsg, const point_t& A, const point_t& B, const double target, const CubicSpline_t* curve, bool& error )
+void CheckPointOnline(const std::string& errmsg, const point_t& A, const point_t& B, const double target, const Spline_t* curve, bool& error )
 {
     point_t res1 = curve->operator ()(target);
     point_t ar =(res1-A); ar.normalize();
@@ -549,7 +553,7 @@ void EffectorTrajectoryTest(bool& error)
     {
         waypoints.push_back(std::make_pair(i,point_t(i,i,i)));
     }
-    helpers::CubicSpline_t* eff_traj = helpers::effector_spline(waypoints.begin(),waypoints.end(),
+    helpers::Spline_t* eff_traj = helpers::effector_spline(waypoints.begin(),waypoints.end(),
                                                                Eigen::Vector3d::UnitZ(),Eigen::Vector3d(0,0,2),
                                                                1,0.02,1,0.5);
     point_t zero(0,0,0);

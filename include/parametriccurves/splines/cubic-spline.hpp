@@ -5,15 +5,7 @@
 * \version 0.1
 * \date 06/17/2013
 *
-* This file contains definitions for the CubicSpline class.
-* Given a set of waypoints (x_i*) and timestep (t_i), it provides the unique set of
-* cubic splines fulfulling those 4 restrictions :
-* - x_i(t_i) = x_i* ; this means that the curve passes through each waypoint
-* - x_i(t_i+1) = x_i+1* ;
-* - its derivative is continous at t_i+1
-* - its 2nd derivative is continous at t_i+1
-* more details in paper "Task-Space Trajectories via Cubic Spline Optimization"
-* By J. Zico Kolter and Andrew Y.ng (ICRA 2009)
+* This file contains definitions for the Spline class.
 */
 
 
@@ -57,8 +49,31 @@ Polynomial<Numeric,Dim,Point,T_Point> create_cubic(Point const& a, Point const& 
     T_Point coeffs = make_cubic_vector<Point, T_Point>(a,b,c,d);
     return Polynomial<Numeric,Dim,Point,T_Point>(coeffs.begin(),coeffs.end(), min, max);
 }
+/// \brief Creates coefficient vector of a quintic spline defined on the interval
+/// [tBegin, tEnd]. It follows the equation
+/// x(t) = a + b(t - t_min_) + c(t - t_min_)^2 + d(t - t_min_)^3 + e(t - t_min_)^4  + f(t - t_min_)^5
+///
+template<typename Point, typename T_Point>
+T_Point make_quintic_vector(Point const& a, Point const& b, Point const& c,
+                   Point const &d, Point const& e, Point const& f)
+{
+    T_Point res;
+    res.push_back(a);res.push_back(b);res.push_back(c);
+    res.push_back(d);res.push_back(e);res.push_back(f);
+    return res;
+}
 
-/// \class CubicSpline
+template<typename Numeric, std::size_t Dim, typename Point, typename T_Point>
+Polynomial<Numeric,Dim,Point,T_Point> create_quintic(Point const& a, Point const& b,
+                                                     Point const& c, Point const &d,
+                                                     Point const &e, Point const &f,
+                                                     const Numeric min, const Numeric max)  
+{
+    T_Point coeffs = make_quintic_vector<Point, T_Point>(a,b,c,d,e,f);
+    return Polynomial<Numeric,Dim,Point,T_Point>(coeffs.begin(),coeffs.end(), min, max);
+}
+
+/// \class Spline
 /// \brief Represents a set of cubic splines defining a continuous function 
 /// crossing each of the waypoint given in its initialization
 ///
@@ -66,7 +81,7 @@ template<typename Numeric=double, std::size_t Dim=3,
          typename Point= Eigen::Matrix<Numeric, Dim, 1>,
          typename T_Point =std::vector<Point,Eigen::aligned_allocator<Point> >,
          typename SplineBase=Polynomial<Numeric, Dim, Point, T_Point> >
-struct CubicSpline :
+struct Spline :
     public AbstractCurve<Numeric, Point>
 {
   typedef Point          point_t;
@@ -83,46 +98,46 @@ struct CubicSpline :
 
 public:
   ///\brief Constructor
-  ///\param wayPointsBegin : an iterator pointing to the first element of a waypoint container
-  ///\param wayPointsEns   : an iterator pointing to the end           of a waypoint container
-  /* Constructors - destructors */
-  template<typename In>
-  CubicSpline(In wayPointsBegin, In wayPointsEnd)
-    : curve_abc_t(),
-      subSplines_(computeWayPoints<In>(wayPointsBegin, wayPointsEnd))
-  {
-    this->t_min = subSplines_.front().tmin();
-    this->t_max = subSplines_.back().tmax();
-  }
-  CubicSpline()
+
+  Spline()
     : curve_abc_t()
   {
   }
 
   ///\brief Constructor
   ///\param subSplines: vector of subsplines
-  CubicSpline(const t_spline_t &subSplines)
+  Spline(const t_spline_t &subSplines)
     : curve_abc_t(subSplines.front().tmin(), subSplines.back().tmax()),
       subSplines_(subSplines) {}
 
   ///\brief Copy Constructor
-  CubicSpline(const CubicSpline& other)
+  Spline(const Spline& other)
     : curve_abc_t(other.subSplines_.front().tmin(), other.subSplines_.front().tmax()),
       subSplines_(other.subSplines_)  {}
   
   ///\brief Destructor
-  ~CubicSpline(){}
+  ~Spline(){}
   
-private:
+public:
 
+
+  /* Given a set of waypoints (x_i*) and timestep (t_i), it provides the unique set of
+   * cubic splines fulfulling those 4 restrictions :
+   * - x_i(t_i) = x_i* ; this means that the curve passes through each waypoint
+   * - x_i(t_i+1) = x_i+1* ;
+   * - its derivative is continous at t_i+1
+   * - its 2nd derivative is continous at t_i+1
+   * more details in paper "Task-Space Trajectories via Cubic Spline Optimization"
+   * By J. Zico Kolter and Andrew Y.ng (ICRA 2009) */
   template<typename In>
-  t_spline_t computeWayPoints(In wayPointsBegin, In wayPointsEnd) const
+  void createCubicSplineFromWayPoints(In wayPointsBegin, In wayPointsEnd)
   {
     std::size_t const size(std::distance(wayPointsBegin, wayPointsEnd));
     if(size < 1) {
       throw; // TODO
     }
-    t_spline_t subSplines; subSplines.reserve(size);
+    subSplines_.clear();
+    subSplines_.reserve(size);
     
     // refer to the paper to understand all this.
     MatrixX h1 = MatrixX::Zero(size, size);
@@ -176,14 +191,17 @@ private:
     d = h5 * x + h6 * b;
     it= wayPointsBegin, next=wayPointsBegin; ++ next;
     for(int i=0; next != wayPointsEnd; ++i, ++it, ++next) {
-      subSplines.push_back(create_cubic<Numeric,Dim,Point,T_Point>(a.row(i), b.row(i),
+      subSplines_.push_back(create_cubic<Numeric,Dim,Point,T_Point>(a.row(i), b.row(i),
                                                                    c.row(i), d.row(i),
                                                                    (*it).first, (*next).first));
     }
-    subSplines.push_back(create_cubic<Numeric,Dim,Point,T_Point>(a.row(size-1), b.row(size-1),
+    subSplines_.push_back(create_cubic<Numeric,Dim,Point,T_Point>(a.row(size-1), b.row(size-1),
                                                                  c.row(size-1), d.row(size-1),
                                                                  (*it).first, (*it).first));
-    return subSplines;
+
+    this->t_min = subSplines_.front().tmin();
+    this->t_max = subSplines_.back().tmax();
+    return;
   }
 
 public:
@@ -249,7 +267,7 @@ public:
     std::ifstream ifs(filename.c_str());
     if(ifs) {
       boost::archive::text_iarchive ia(ifs);
-      CubicSpline& cubic_spline = *static_cast<CubicSpline*>(this);
+      Spline& cubic_spline = *static_cast<Spline*>(this);
       ia >> cubic_spline;
     }
     else {
@@ -264,7 +282,7 @@ public:
     std::ofstream ofs(filename.c_str());
     if(ofs) {
       boost::archive::text_oarchive oa(ofs);
-      oa << *static_cast<const CubicSpline*>(this);
+      oa << *static_cast<const Spline*>(this);
     }
     else {
       const std::string exception_message(filename + " does not seem to be a valid file.");

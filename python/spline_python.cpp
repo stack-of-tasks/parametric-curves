@@ -38,7 +38,7 @@ typedef typename t3d_poly_coeffs_vector_t::const_iterator cit3d_poly_coeffs_vect
 //typedef spline::bezier_curve  <real, real, 6, true, point6_t> bezier6_t;
 typedef parametriccurves::splines::Polynomial <real, 3, point_t, t_point_t> polynom_t;
 typedef typename std::vector<polynom_t, Eigen::aligned_allocator<polynom_t> > t_spline_t;
-typedef parametriccurves::splines::CubicSpline  <real, 3, point_t, t_point_t> cubic_spline_t;
+typedef parametriccurves::splines::Spline  <real, 3, point_t, t_point_t> spline_t;
 typedef polynom_t::coeff_t coeff_t;
 typedef std::pair<real, point_t> waypoint_t;
 typedef std::vector<waypoint_t, Eigen::aligned_allocator<point_t> > t_waypoint_t;
@@ -52,7 +52,7 @@ typedef std::vector<waypoint_t, Eigen::aligned_allocator<point_t> > t_waypoint_t
 //EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(bezier_t)
 //EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(bezier6_t)
 EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(polynom_t)
-EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(cubic_spline_t)
+EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(spline_t)
 
 //EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(curve_constraints_t)
 //EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(spline_deriv_constraint_t)
@@ -152,19 +152,20 @@ Eigen::Matrix<real, Eigen::Dynamic, Eigen::Dynamic> wayPointsToList(const Bezier
         res.block<dim,1>(0,col) = *cit;
     return res;
 }
-
-cubic_spline_t* wrapExactCubicConstructor(const coeff_t& array, const time_waypoints_t& time_wp)
+void spline_from_waypoints(spline_t& self, const coeff_t& array,
+                                 const time_waypoints_t& time_wp)
 {
     t_waypoint_t wps = getWayPoints(array, time_wp);
-    return new cubic_spline_t(wps.begin(), wps.end());
+    self.createCubicSplineFromWayPoints(wps.begin(), wps.end());
+    return;
 }
 
-cubic_spline_t* wrapExactCubicConstructorvoid()
+spline_t* wrapExactCubicConstructorvoid()
 {
-    return new cubic_spline_t();
+    return new spline_t();
 }
 
-cubic_spline_t* wrapExactCubicConstructorPolySequence(const bp::list&
+spline_t* wrapExactCubicConstructorPolySequence(const bp::list&
                                                       list_polynomials,
                                                       const time_vector_t& time_vector)
 {
@@ -177,7 +178,7 @@ cubic_spline_t* wrapExactCubicConstructorPolySequence(const bp::list&
                                    time_vector[i+1]));
     //time_vector[i], time_vector[i+1]));
   }
-  return new cubic_spline_t(subSplines);
+  return new spline_t(subSplines);
 }
 
   /*
@@ -305,18 +306,20 @@ BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
     /** END cubic function**/
 
 
-    /** BEGIN cubic_spline curve**/
-    class_<cubic_spline_t>
-        ("cubic_spline", no_init)
-            .def("__init__", make_constructor(&wrapExactCubicConstructor))
+    /** BEGIN spline curve**/
+    class_<spline_t>
+        ("spline", no_init)
             .def("__init__", make_constructor(&wrapExactCubicConstructorvoid))
             .def("__init__", make_constructor(&wrapExactCubicConstructorPolySequence))
-            .def("min", &cubic_spline_t::tmin)
-            .def("max", &cubic_spline_t::tmax)
-            .def("__call__", &cubic_spline_t::operator())
-            .def("derivate", &cubic_spline_t::derivate)
-            .def("load_spline",&cubic_spline_t::loadSpline,boost::python::args("filename"),"Loads *this")
-            .def("save_spline",&cubic_spline_t::saveSpline,boost::python::args("filename"),"Saves *this")
+            .def("min", &spline_t::tmin)
+            .def("max", &spline_t::tmax)
+            .def("__call__", &spline_t::operator())
+            .def("derivate", &spline_t::derivate)
+            .def("create_cubic_spline_from_waypoints", &spline_from_waypoints,
+                 boost::python::args("waypoints", "time vector"),
+                 "Creates a cubic spline from a set of way points")
+            .def("load_spline",&spline_t::loadSpline,boost::python::args("filename"),"Loads *this")
+            .def("save_spline",&spline_t::saveSpline,boost::python::args("filename"),"Saves *this")
         ;
     /** END bezier curve**/
 
@@ -340,10 +343,10 @@ BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
         ("spline_deriv_constraint", no_init)
             .def("__init__", make_constructor(&wrapSplineDerivConstraint))
             .def("__init__", make_constructor(&wrapSplineDerivConstraintNoConstraints))
-            .def("min", &cubic_spline_t::min)
-            .def("max", &cubic_spline_t::max)
-            .def("__call__", &cubic_spline_t::operator())
-            .def("derivate", &cubic_spline_t::derivate)
+            .def("min", &spline_t::min)
+            .def("max", &spline_t::max)
+            .def("__call__", &spline_t::operator())
+            .def("derivate", &spline_t::derivate)
         ;
     */
     /** END spline_deriv_constraints**/
