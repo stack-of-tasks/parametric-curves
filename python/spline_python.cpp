@@ -1,6 +1,6 @@
 //#include "parametriccurves/bezier_curve.h"
-#include "parametriccurves/splines/polynomial.hpp"
-#include "parametriccurves/splines/cubic-spline.hpp"
+#include "parametriccurves/polynomial.hpp"
+#include "parametriccurves/spline.hpp"
 
 //#include "parametriccurves/splines/spline_deriv_constraint.h"
 //#include "parametriccurves/splines/curve_constraint.h"
@@ -36,9 +36,9 @@ typedef typename t3d_poly_coeffs_vector_t::const_iterator cit3d_poly_coeffs_vect
 
 //typedef spline::bezier_curve  <real, real, 3, true, point_t> bezier_t;
 //typedef spline::bezier_curve  <real, real, 6, true, point6_t> bezier6_t;
-typedef parametriccurves::splines::Polynomial <real, 3, point_t, t_point_t> polynom_t;
+typedef parametriccurves::Polynomial <real, 3, point_t, t_point_t> polynom_t;
 typedef typename std::vector<polynom_t, Eigen::aligned_allocator<polynom_t> > t_spline_t;
-typedef parametriccurves::splines::Spline  <real, 3, point_t, t_point_t> spline_t;
+typedef parametriccurves::Spline  <real, 3, point_t, t_point_t> spline_t;
 typedef polynom_t::coeff_t coeff_t;
 typedef std::pair<real, point_t> waypoint_t;
 typedef std::vector<waypoint_t, Eigen::aligned_allocator<point_t> > t_waypoint_t;
@@ -58,8 +58,6 @@ EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(spline_t)
 //EIGENPY_DEFINE_STRUCT_ALLOCATOR_SPECIALIZATION(spline_deriv_constraint_t)
 
 namespace parametriccurves
-{
-namespace splines
 {
 using namespace boost::python;
 template <typename PointList, typename T_Point>
@@ -353,5 +351,4 @@ BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
 
 
 }
-}
-} // namespace spline
+} // namespace parametriccurves

@@ -9,15 +9,13 @@
 */
 
 
-#ifndef _parameteric_curves_splines_cubic_splines_hpp
-#define _parameteric_curves_splines_cubic_splines_hpp
+#ifndef _parameteric_curves_spline_hpp
+#define _parameteric_curves_spline_hpp
 
 #include <parametriccurves/abstract-curve.hpp>
-//#include "quintic_spline.h"
-#include <parametriccurves/splines/polynomial.hpp>
+#include <parametriccurves/polynomial.hpp>
 #include <parametriccurves/MathDefs.h>
 
-#include <functional>
 #include <fstream>
 #include <vector>
 #include <boost/archive/text_oarchive.hpp>
@@ -25,8 +23,6 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/split_member.hpp>
 namespace parametriccurves
-{
-namespace splines
 {
 
 /// \brief Creates coefficient vector of a cubic spline defined on the interval
@@ -229,10 +225,6 @@ public:
     }
   }
 
-  /*Getters*/
-  virtual const time_t tmin() const {return this->t_min;}
-  virtual const time_t tmax() const {return this->t_max;}
-
 protected:
   /*Attributes*/
   t_spline_t subSplines_; // const
@@ -293,6 +285,5 @@ public:
   //BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 };
-}
 }
 #endif //_CLASS_EXACTCUBIC

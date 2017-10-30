@@ -11,8 +11,8 @@
 */
 
 
-#ifndef _parameteric_curves_splines_polynomial_hpp
-#define _parameteric_curves_splines_polynomial_hpp
+#ifndef _parameteric_curves_polynomial_hpp
+#define _parameteric_curves_polynomial_hpp
 
 #include <parametriccurves/abstract-curve.hpp>
 #include <parametriccurves/serialization/eigen-matrix.hpp>
@@ -23,8 +23,6 @@
 #include <boost/archive/text_iarchive.hpp>
 
 namespace parametriccurves
-{
-namespace splines
 {
 /// \class Polynomial
 /// \brief Represents a Polynomialf arbitrary order defined on the interval
@@ -211,7 +209,6 @@ private:
     return res;
   }
 }; //class Polynomial
-}
 }
 #endif //_STRUCT_POLYNOMIAL
 

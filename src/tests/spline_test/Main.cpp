@@ -1,5 +1,5 @@
-#include "parametriccurves/splines/cubic-spline.hpp"
-#include "parametriccurves/splines/polynomial.hpp"
+#include "parametriccurves/spline.hpp"
+#include "parametriccurves/polynomial.hpp"
 /*#include "parametriccurves/bezier_curve.h"
 #include "parametriccurves/spline_deriv_constraint.h"
 #include "parametriccurves/helpers/effector_spline.h"
@@ -12,8 +12,6 @@
 using namespace std;
 
 namespace parametriccurves
-{
-namespace splines
 {
 typedef Eigen::Vector3d point_t;
 typedef std::vector<point_t,Eigen::aligned_allocator<point_t> >  t_point_t;
@@ -47,11 +45,8 @@ bool QuasiEqual(const double a, const double b, const float margin)
 
 const double margin = 0.001;
 
-} //namespace splines
 } // namespace paramtericcurves
-
-using namespace parametriccurves::splines;
-
+using namespace parametriccurves;
 ostream& operator<<(ostream& os, const point_t& pt)
 {
     os << "(" << pt.x() << ", " << pt.y() << ", " << pt.z() << ")";

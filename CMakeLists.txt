@@ -47,19 +47,14 @@ install(FILES
 #	${CMAKE_SOURCE_DIR}/include/parametriccurves/bernstein.h
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/abstract-curve.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/MathDefs.h
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/spline.hpp
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/polynomial.hpp
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/spline_deriv_constraint.h
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/bezier_curve.h
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/curve_constraint.h
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves
 	)
     
-install(FILES
-	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/cubic-spline.hpp
-	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/polynomial.hpp
-	${CMAKE_SOURCE_DIR}/include/parametriccurves/splines/quintic-spline.hpp
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/splines
-	)
-
 install(FILES
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/eigen-matrix.hpp
 	#${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/archive.hpp
