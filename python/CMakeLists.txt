@@ -29,3 +29,34 @@ SET_TARGET_PROPERTIES(${PYWRAP} PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}")
 
 INSTALL(TARGETS ${PYWRAP} DESTINATION ${${PYWRAP}_INSTALL_DIR})
+
+SET(PYTHON_FILES
+  __init__.py
+  )
+
+FOREACH(python ${PYTHON_FILES})
+  GET_FILENAME_COMPONENT(pythonFile ${python} NAME)
+  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E ${LINK}
+    ${${PROJECT_NAME}_SOURCE_DIR}/python/${python}
+    ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile})
+  # Generate pyc file
+  EXECUTE_PROCESS(COMMAND
+    ${PYTHON_EXECUTABLE} -m py_compile
+    ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile})
+  # Tag pyc file as generated.
+
+  SET_SOURCE_FILES_PROPERTIES(
+    "${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c"
+    PROPERTIES GENERATED TRUE)
+
+  # Clean generated files.
+  SET_PROPERTY(
+    DIRECTORY APPEND PROPERTY
+    ADDITIONAL_MAKE_CLEAN_FILES
+    "${${PROJECT_NAME}_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c")
+
+  INSTALL(FILES
+    "${${PROJECT_NAME}_SOURCE_DIR}/python/${python}"
+    "${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c"
+    DESTINATION ${${PYWRAP}_INSTALL_DIR})
+ENDFOREACH(python)
