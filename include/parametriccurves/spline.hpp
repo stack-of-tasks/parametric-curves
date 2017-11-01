@@ -220,7 +220,7 @@ public:
 
 
 public:
-  virtual point_t operator()(const time_t t) const
+  virtual point_t operator()(const time_t& t) const
   {
     if((t < subSplines_.front().tmin() || t > subSplines_.back().tmax())) {
       throw std::out_of_range("TODO");
@@ -232,7 +232,7 @@ public:
     }
   }
 
-  virtual point_t derivate(const time_t t, const std::size_t order) const
+  virtual point_t derivate(const time_t& t, const std::size_t& order) const
   {
     if((t < subSplines_.front().tmin() || t > subSplines_.back().tmax())) {
       throw std::out_of_range("TODO");

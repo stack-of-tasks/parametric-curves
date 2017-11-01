@@ -171,6 +171,8 @@ spline_t* wrapExactCubicConstructorPolySequence(const bp::list&
   t3d_poly_coeffs_vector_t poly_coeffs_vector;
   t_spline_t subSplines;
   subSplines.clear();
+
+  assert(time_vector.size()==len(list_polynomials)+1);
   for(int i=0; i<len(list_polynomials); ++i) {
     subSplines.push_back(polynom_t(bp::extract<coeff_t>(list_polynomials[i]), time_vector[i],
                                    time_vector[i+1]));

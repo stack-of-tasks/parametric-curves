@@ -133,10 +133,10 @@ public:
     ///  \brief Evaluation of the cubic spline at time t using horner's scheme.
     ///  \param t : the time when to evaluate the spine
     ///  \param return : the value x(t)
-  virtual point_t operator()(const time_t t) const
+  virtual point_t operator()(const time_t& t) const
   {
     if((t < this->t_min || t > this->t_max)){ throw std::out_of_range("TODO");}
-    time_t const dt (t-this->t_min);
+    const time_t& dt (t);
     point_t h = coefficients_.col(order_);
     for(int i=order_-1; i>=0; i--)
       h = dt*h + coefficients_.col(i);
@@ -148,10 +148,10 @@ public:
   ///  \param t : the time when to evaluate the spline
   ///  \param order : order of the derivative
   ///  \param return : the value x(t)
-  virtual point_t derivate(const time_t t, const std::size_t order) const
+  virtual point_t derivate(const time_t& t, const std::size_t& order) const
   {
     if((t < this->t_min || t > this->t_max)){ throw std::out_of_range("TODO");}
-    time_t const dt (t-this->t_min);
+    const time_t& dt (t);
     time_t cdt(1);
     point_t currentPoint_ = point_t::Zero();
     for(int i = order; i < order_+1; ++i, cdt*=dt)
