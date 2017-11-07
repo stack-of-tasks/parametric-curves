@@ -49,6 +49,7 @@ install(FILES
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/MathDefs.h
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/spline.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/polynomial.hpp
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/infinite-sinusoid.hpp
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/spline_deriv_constraint.h
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/bezier_curve.h
         ${CMAKE_SOURCE_DIR}/include/parametriccurves/curve-constraint.hpp
