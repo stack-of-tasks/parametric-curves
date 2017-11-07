@@ -42,8 +42,15 @@ public:
 
 public:
   /*Getters*/
-  virtual const time_t tmin() const { return t_min; }
-  virtual const time_t tmax() const { return t_max; }
+  virtual const time_t& tmin() const { return t_min; }
+  virtual const time_t& tmax() const { return t_max; }
+  virtual static bool checkRange(const time_t t) const { return (t>=t_min)&&(t<=t_max); }
+  virtual bool setTimePeriod(const time_t& traj_time_)
+  {
+    t_min = 0.0;
+    t_max = traj_time_;  
+    return true;
+  }
 
 protected:
   time_t t_min;

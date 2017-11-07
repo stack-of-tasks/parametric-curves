@@ -153,10 +153,15 @@ public:
     if((t < this->t_min || t > this->t_max)){ throw std::out_of_range("TODO");}
     const time_t& dt (t);
     time_t cdt(1);
-    point_t currentPoint_ = point_t::Zero();
+    point_t currentPoint_ = point_t::Zero(dim_);
     for(int i = order; i < order_+1; ++i, cdt*=dt)
       currentPoint_ += cdt *coefficients_.col(i) * fact(i, order);
     return currentPoint_;
+  }
+
+  virtual const std::size_t& size() const
+  {
+    return dim_;
   }
   
 protected:

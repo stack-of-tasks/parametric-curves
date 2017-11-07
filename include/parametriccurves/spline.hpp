@@ -74,7 +74,7 @@ Polynomial<Numeric,Dim,Point,T_Point> create_quintic(Point const& a, Point const
 /// \brief Represents a set of cubic splines defining a continuous function 
 /// crossing each of the waypoint given in its initialization
 ///
-template<typename Numeric=double, std::size_t Dim=3,
+template<typename Numeric=double, std::size_t Dim=Eigen::Dynamic,
          typename Point= Eigen::Matrix<Numeric, Dim, 1>,
          typename T_Point =std::vector<Point,Eigen::aligned_allocator<Point> >,
          typename SplineBase=Polynomial<Numeric, Dim, Point, T_Point> >
@@ -223,7 +223,7 @@ public:
   virtual point_t operator()(const time_t& t) const
   {
     if((t < subSplines_.front().tmin() || t > subSplines_.back().tmax())) {
-      throw std::out_of_range("TODO");
+      throw std::out_of_range("t is out of range");
     }
     for(cit_spline_t it = subSplines_.begin(); it != subSplines_.end(); ++ it) {
       if(t >= (it->tmin()) && t <= (it->tmax())) {
@@ -235,13 +235,18 @@ public:
   virtual point_t derivate(const time_t& t, const std::size_t& order) const
   {
     if((t < subSplines_.front().tmin() || t > subSplines_.back().tmax())) {
-      throw std::out_of_range("TODO");
+      throw std::out_of_range("derivative call out of range");
     }
     for(cit_spline_t it = subSplines_.begin(); it != subSplines_.end(); ++ it) {
       if(t >= (it->tmin()) && t <= (it->tmax())) {
         return it->derivate(t, order);
       }
     }
+  }
+
+  virtual const std::size_t& size() const
+  {
+    return subSplines_[0].size();
   }
   
 protected:
@@ -318,7 +323,7 @@ private:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
-  void loadSpline(const std::string & filename) throw (std::invalid_argument)
+  bool loadSpline(const std::string & filename) throw (std::invalid_argument)
   {
     std::ifstream ifs(filename.c_str());
     if(ifs) {
@@ -329,11 +334,13 @@ public:
     else {
       const std::string exception_message(filename + " does not seem to be a valid file.");
       throw std::invalid_argument(exception_message);
+      return false;
     }
+    return true;
   }
       
   /// \brief Saved a Derived object as a text file.
-  void saveSpline(const std::string & filename) const throw (std::invalid_argument)
+  bool saveSpline(const std::string & filename) const throw (std::invalid_argument)
   {
     std::ofstream ofs(filename.c_str());
     if(ofs) {
@@ -343,7 +350,9 @@ public:
     else {
       const std::string exception_message(filename + " does not seem to be a valid file.");
       throw std::invalid_argument(exception_message);
+      return false;
     }
+    return true;
   }
 
   //BOOST_SERIALIZATION_SPLIT_MEMBER()
