@@ -22,6 +22,7 @@ struct  AbstractCurve
 {
   typedef Point   point_t;
   typedef Numeric time_t;
+  typedef Numeric num_t;
 public:
   /* Constructors - destructors */
   AbstractCurve(time_t t_min_, time_t t_max_):  t_min(t_min_), t_max(t_max_) { }
@@ -32,19 +33,24 @@ public:
   ///  \brief Evaluation of the cubic spline at time t.
   ///  \param t : the time when to evaluate the spine
   ///  \param return : the value x(t)
-  virtual point_t operator()(const time_t& t) const = 0;
+  virtual const point_t operator()(const time_t& t) const = 0;
 
   ///  \brief Evaluation of the derivative spline at time t.
   ///  \param t : the time when to evaluate the spline
   ///  \param order : order of the derivative
   ///  \param return : the value x(t)
-  virtual point_t derivate(const time_t& t, const std::size_t& order) const = 0;
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const = 0;
 
 public:
   /*Getters*/
   virtual const time_t& tmin() const { return t_min; }
   virtual const time_t& tmax() const { return t_max; }
-  virtual static bool checkRange(const time_t t) const { return (t>=t_min)&&(t<=t_max); }
+  virtual bool checkRange(const time_t t) const { return (t>=t_min)&&(t<=t_max); }
+
+  /* Setters */
+  virtual bool setInitialPoint(const point_t& /*x_init*/) = 0;
+  virtual bool setInitialPoint(const num_t& /*x_init*/) = 0;
+
   virtual bool setTimePeriod(const time_t& traj_time_)
   {
     t_min = 0.0;

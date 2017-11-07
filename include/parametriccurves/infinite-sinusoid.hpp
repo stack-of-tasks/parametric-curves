@@ -32,12 +32,6 @@ struct InfiniteSinusoid :
 public:
   ///\brief Constructor
 
-  InfiniteSinusoid()
-    : curve_abc_t(-1,-1),
-      traj_time(NAN),
-      x_init(point_t::Zero()),
-      x_final(point_t::Zero()) {}
-
   InfiniteSinusoid(const time_t& traj_time_,
                    const point_t& x_init_= Eigen::Matrix<Numeric, Dim, 1>::Zero(),
                    const point_t& x_final_= Eigen::Matrix<Numeric, Dim, 1>::Zero())
@@ -51,12 +45,12 @@ public:
   
 public:
 
-  virtual point_t operator()(const time_t& t) const
+  virtual const point_t operator()(const time_t& t) const
   {
     return x_init + 0.5*(x_final-x_init)*(1.0-cos(two_pi_f(t)));
   }
 
-  virtual point_t derivate(const time_t& t, const std::size_t& order) const
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const
   {
     if(order==1)
       return (x_final-x_init)*0.5*two_pi_f(1)*sin(two_pi_f(t));
@@ -114,9 +108,9 @@ protected:
   time_t traj_time;
 
 private:
-  inline static const num_t& two_pi_f(const time_t& t) const 
+  inline const num_t two_pi_f(const time_t& t) const 
   {
-    return (M_PI/m_traj_time)*t;
+    return (M_PI/traj_time)*t;
   }
 
 };

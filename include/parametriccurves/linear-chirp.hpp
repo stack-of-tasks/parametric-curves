@@ -36,15 +36,6 @@ struct LinearChirp :
 public:
   ///\brief Constructor
 
-  LinearChirp()
-    : curve_abc_t(-1,-1),
-      x_init(point_t::Zero()),
-      x_final(point_t::Zero())
-  {
-    f0.setZero(Dim);
-    f1.setZero(Dim);
-  }
-
   LinearChirp(const time_t& traj_time_,
               const point_t& x_init_= Eigen::Matrix<Numeric, Dim, 1>::Zero(),
               const point_t& x_final_= Eigen::Matrix<Numeric, Dim, 1>::Zero())
@@ -72,20 +63,20 @@ public:
   
 public:
 
-  virtual point_t operator()(const time_t& t) const
+  virtual const point_t operator()(const time_t& t) const
   {
-    const point_t& m_p   = 0.5*(1.0-phase(t).array().cos());
+    const point_t& m_p = 0.5*(1.0-phase(t).array().cos());
     return x_init.array() + (x_final.array()-x_init.array())*m_p.array();
   }
 
-  virtual point_t derivate(const time_t& t, const std::size_t& order) const
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const
   {
     if(order==1) {
-      const point& m_dp  = M_PI*freq(t).array() * phase(t).array().sin();
+      const point_t& m_dp  = M_PI*freq(t).array() * phase(t).array().sin();
       return (x_final-x_init).array()*m_dp.array();
     }
     else if(order==2) {
-      const point& m_ddp = 2.0*M_PI*M_PI* freq(t).array()* freq(t).array()* phase(t).array().cos();
+      const point_t& m_ddp = 2.0*M_PI*M_PI* freq(t).array()* freq(t).array()* phase(t).array().cos();
       return (x_final-x_init).array()*m_ddp.array();
     }
     else {
@@ -96,7 +87,7 @@ public:
 
 public:
   /*Setters*/
-  virtual bool setInitialFrequency(const Eigen::VectorXd& f0)
+  virtual bool setInitialFrequency(const Eigen::VectorXd& f0_)
   {
     if(f0.size()!=f0_.size())
       return false;
@@ -168,7 +159,7 @@ protected:
   point_t x_final;
 
 private:
-  inline static const num_t& freq(const time_t& t) const 
+  inline const freq_t freq(const time_t& t) const 
   {
     const freq_t& m_k = 2.0*(f1-f0)/this->t_max;
     if(t<0.5*this->t_max)
@@ -177,7 +168,7 @@ private:
       return f1 + m_k*(0.5*this->t_max - t);
   }
 
-  inline static const num_t& phase(const time_t& t) const 
+  inline const phase_t phase(const time_t& t) const 
   {
     const freq_t& m_k = 2.0*(f1-f0)/this->t_max;
     const phase_t& m_phi_0 = M_PI*this->t_max*(f0-f1);

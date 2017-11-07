@@ -220,7 +220,7 @@ public:
 
 
 public:
-  virtual point_t operator()(const time_t& t) const
+  virtual const point_t operator()(const time_t& t) const
   {
     if((t < subSplines_.front().tmin() || t > subSplines_.back().tmax())) {
       throw std::out_of_range("t is out of range");
@@ -232,7 +232,7 @@ public:
     }
   }
 
-  virtual point_t derivate(const time_t& t, const std::size_t& order) const
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const
   {
     if((t < subSplines_.front().tmin() || t > subSplines_.back().tmax())) {
       throw std::out_of_range("derivative call out of range");
@@ -247,6 +247,15 @@ public:
   virtual const std::size_t& size() const
   {
     return subSplines_[0].size();
+  }
+
+  virtual bool setInitialPoint(const point_t& /*x_init*/)
+  {
+    return false;
+  }
+  virtual bool setInitialPoint(const num_t& /*x_init*/)
+  {
+    return false;
   }
   
 protected:

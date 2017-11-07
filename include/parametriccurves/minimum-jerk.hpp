@@ -30,13 +30,6 @@ struct MinimumJerk :
 public:
   ///\brief Constructor
 
-  MinimumJerk()
-    : curve_abc_t(-1,-1),
-      x_init(point_t::Zero()),
-      x_final(point_t::Zero())
-  {
-  }
-
   MinimumJerk(const time_t& traj_time_,
               const point_t& x_init_= Eigen::Matrix<Numeric, Dim, 1>::Zero(),
               const point_t& x_final_= Eigen::Matrix<Numeric, Dim, 1>::Zero())
@@ -46,19 +39,12 @@ public:
   {
   }
 
-  MinimumJerk(const time_t& traj_time_,
-              const point_t& x_init_= Eigen::Matrix<Numeric, Dim, 1>::Zero(),
-              const point_t& x_final_= Eigen::Matrix<Numeric, Dim, 1>::Zero())
-    : curve_abc_t(0,traj_time_),
-      x_init(x_init_),
-      x_final(x_final_)  {}
-
   ///\brief Destructor
   ~MinimumJerk(){}
   
 public:
 
-  virtual point_t operator()(const time_t& t) const
+  virtual const point_t operator()(const time_t& t) const
   {
     time_t td  = t/this->t_max;
     time_t td2 = td*td;    time_t td3 = td2*td;
@@ -67,7 +53,7 @@ public:
     return x_init + (x_final-x_init)*p;
   }
 
-  virtual point_t derivate(const time_t& t, const std::size_t& order) const
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const
   {
     time_t td  = t/this->t_max;
     time_t td2 = td*td;    time_t td3 = td2*td;

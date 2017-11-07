@@ -31,12 +31,8 @@ struct Constant :
 public:
   ///\brief Constructor
 
-  Constant()
-    : curve_abc_t(-1,-1),
-      x_init(point_t::Zero()) {}
-
-  Constant(const point_t& x_init_= Eigen::Matrix<Numeric, Dim, 1>::Zero())
-    : curve_abc_t(-1,-1),
+  Constant(const time_t& traj_time, const point_t& x_init_= Eigen::Matrix<Numeric, Dim, 1>::Zero())
+    : curve_abc_t(0,traj_time),
       x_init(x_init_) {}
 
   ///\brief Destructor
@@ -44,14 +40,14 @@ public:
   
 public:
 
-  virtual const point_t& operator()(const time_t& t) const
+  virtual const point_t operator()(const time_t& t) const
   {
     return x_init;
   }
 
-  virtual const point_t& derivate(const time_t& t, const std::size_t& order) const
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const
   {
-    return point_t::Zero()
+    return point_t::Zero();
   }
 
   virtual bool setInitialPoint(const point_t& x_init_)

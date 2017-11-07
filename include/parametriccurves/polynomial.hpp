@@ -133,7 +133,7 @@ public:
     ///  \brief Evaluation of the cubic spline at time t using horner's scheme.
     ///  \param t : the time when to evaluate the spine
     ///  \param return : the value x(t)
-  virtual point_t operator()(const time_t& t) const
+  virtual const point_t operator()(const time_t& t) const
   {
     if((t < this->t_min || t > this->t_max)){ throw std::out_of_range("TODO");}
     const time_t& dt (t);
@@ -148,7 +148,7 @@ public:
   ///  \param t : the time when to evaluate the spline
   ///  \param order : order of the derivative
   ///  \param return : the value x(t)
-  virtual point_t derivate(const time_t& t, const std::size_t& order) const
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const
   {
     if((t < this->t_min || t > this->t_max)){ throw std::out_of_range("TODO");}
     const time_t& dt (t);
@@ -162,6 +162,15 @@ public:
   virtual const std::size_t& size() const
   {
     return dim_;
+  }
+
+  virtual bool setInitialPoint(const point_t& /*x_init*/)
+  {
+    return false;
+  }
+  virtual bool setInitialPoint(const num_t& /*x_init*/)
+  {
+    return false;
   }
   
 protected:

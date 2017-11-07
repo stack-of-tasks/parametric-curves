@@ -32,13 +32,8 @@ struct TextFile :
 public:
   ///\brief Constructor
 
-  TextFile()
-    : curve_abc_t(-1,-1),
-      timeStep(0.0),
-      x_init(point_t::Zero()) {}
-
   TextFile(const time_t& dt_, const std::size_t& size_)
-    : curve_abc_t(-1,-1)
+    : curve_abc_t(-1,-1),
       timeStep(dt_),
       size(size_)  {}
 
@@ -47,13 +42,13 @@ public:
   
 public:
 
-  virtual const point_t& operator()(const time_t& t) const
+  virtual const point_t operator()(const time_t& t) const
   {
     Eigen::VectorXd::Index i = (Eigen::VectorXd::Index)std::floor(t/timeStep);
     return posValues.row(i);
   }
 
-  virtual const point_t& derivate(const time_t& t, const std::size_t& order) const
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const
   {
     Eigen::VectorXd::Index i = (Eigen::VectorXd::Index)std::floor(t/timeStep);
     if(order==1)
@@ -70,7 +65,7 @@ public:
   
   virtual bool loadTextFile(const std::string& fileName)
   {
-    Eigen::MatrixXd data = readMatrixFromFile(fileName.c_str());
+    Eigen::MatrixXd data = parametriccurves::utils::readMatrixFromFile(fileName);
     if(data.cols()!=3*size)
     {
       std::cout<<"Unexpected number of columns (expected "<<3*size<<", found "<<data.cols()<<")\n";
@@ -87,6 +82,20 @@ public:
     x_init = posValues.row(0);
     
     return true;
+  }
+
+  virtual bool setInitialPoint(const point_t& /*x_init*/)
+  {
+    return false;
+  }
+  virtual bool setInitialPoint(const num_t& /*x_init*/)
+  {
+    return false;
+  }
+
+  const point_t& getInitialPoint(void) const
+  {
+    return x_init;
   }
 
 protected:
