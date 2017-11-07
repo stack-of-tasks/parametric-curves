@@ -53,6 +53,7 @@ install(FILES
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/constant.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/linear-chirp.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/minimum-jerk.hpp
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/text-file.hpp
         #	${CMAKE_SOURCE_DIR}/include/parametriccurves/bezier_curve.h
         ${CMAKE_SOURCE_DIR}/include/parametriccurves/curve-constraint.hpp
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves
@@ -62,6 +63,11 @@ install(FILES
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/eigen-matrix.hpp
 	#${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/archive.hpp
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/serialization
+        )
+install(FILES
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/utils/file-io.hpp
+	#${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/archive.hpp
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/utils
         )
 
 IF(BUILD_PYTHON_INTERFACE)
