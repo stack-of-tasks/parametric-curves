@@ -50,6 +50,7 @@ install(FILES
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/spline.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/polynomial.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/infinite-sinusoid.hpp
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/infinite-const-acc.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/constant.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/linear-chirp.hpp
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/minimum-jerk.hpp
