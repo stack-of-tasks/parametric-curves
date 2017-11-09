@@ -66,6 +66,10 @@ install(FILES
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/serialization
         )
 install(FILES
+	${CMAKE_SOURCE_DIR}/include/parametriccurves/spatial/force-curve.hpp
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/spatial
+        )
+install(FILES
 	${CMAKE_SOURCE_DIR}/include/parametriccurves/utils/file-io.hpp
 	#${CMAKE_SOURCE_DIR}/include/parametriccurves/serialization/archive.hpp
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametriccurves/utils

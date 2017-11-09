@@ -1,6 +1,7 @@
 //#include "parametriccurves/bezier_curve.h"
 #include <parametriccurves/polynomial.hpp>
 #include <parametriccurves/spline.hpp>
+#include <parametriccurves/spatial/force-curve.hpp>
 
 //#include "parametriccurves/splines/spline_deriv_constraint.h"
 #include <parametriccurves/curve-constraint.hpp>
@@ -36,9 +37,10 @@ typedef typename t3d_poly_coeffs_vector_t::const_iterator cit3d_poly_coeffs_vect
 
 //typedef spline::bezier_curve  <real, real, 3, true, point_t> bezier_t;
 //typedef spline::bezier_curve  <real, real, 6, true, point6_t> bezier6_t;
-typedef parametriccurves::Polynomial <real, 3, point_t, t_point_t> polynom_t;
+typedef parametriccurves::Polynomial <real, 3, point_t> polynom_t;
 typedef typename std::vector<polynom_t, Eigen::aligned_allocator<polynom_t> > t_spline_t;
-typedef parametriccurves::Spline  <real, 3, point_t, t_point_t> spline_t;
+typedef parametriccurves::Spline  <real, 3, point_t> spline_t;
+typedef parametriccurves::spatial::ForceCurve <real> force_t;
 typedef polynom_t::coeff_t coeff_t;
 typedef std::pair<real, point_t> waypoint_t;
 typedef std::vector<waypoint_t, Eigen::aligned_allocator<point_t> > t_waypoint_t;
@@ -181,6 +183,16 @@ spline_t* wrapExactCubicConstructorPolySequence(const bp::list&
   return new spline_t(subSplines);
 }
 
+force_t* wrapForceCurveConstructorvoid()
+{
+  return new force_t();
+}
+
+force_t* wrapForceCurveConstructorSplines(const spline_t& linear_part, const spline_t& ang_part)
+{
+  return new force_t(linear_part, ang_part);
+}
+
 void spline_from_waypoints_constr(spline_t& self, const coeff_t& array,
                                   const time_waypoints_t& time_wp, 
                                   const curve_constraints_t& constraints)
@@ -306,19 +318,40 @@ BOOST_PYTHON_MODULE(libparametriccurves_pywrap)
         ("spline", no_init)
             .def("__init__", make_constructor(&wrapExactCubicConstructorvoid))
             .def("__init__", make_constructor(&wrapExactCubicConstructorPolySequence))
-            .def("min", &spline_t::tmin)
-            .def("max", &spline_t::tmax)
-            .def("__call__", &spline_t::operator())
-            .def("derivate", &spline_t::derivate)
+      .def("min", &spline_t::tmin, bp::return_value_policy<bp::return_by_value>())
+      .def("max", &spline_t::tmax, bp::return_value_policy<bp::return_by_value>())
+            .def("__call__", &spline_t::operator(), bp::return_value_policy<bp::return_by_value>())
+            .def("derivate", &spline_t::derivate, bp::return_value_policy<bp::return_by_value>())
             .def("create_spline_from_waypoints", &spline_from_waypoints,
                  boost::python::args("waypoints", "time vector"),
                  "Creates a cubic spline from a set of way points")
             .def("create_spline_from_waypoints_constr", &spline_from_waypoints_constr,
                  boost::python::args("waypoints", "time vector", "constraints"),
                  "Creates a spline from a set of way points and constraints")
-            .def("load_spline",&spline_t::loadSpline,boost::python::args("filename"),"Loads *this")
-            .def("save_spline",&spline_t::saveSpline,boost::python::args("filename"),"Saves *this")
+            .def("load_from_file",&spline_t::loadFromFile,boost::python::args("filename"),"Loads *this")
+            .def("save_to_file",&spline_t::saveToFile,boost::python::args("filename"),"Saves *this")
         ;
+    /** BEGIN force curve**/
+
+    class_<force_t>
+        ("forcecurve", no_init)
+            .def("__init__", make_constructor(&wrapForceCurveConstructorvoid))
+            .def("__init__", make_constructor(&wrapForceCurveConstructorSplines))
+      .def("min", &force_t::tmin, bp::return_value_policy<bp::return_by_value>())
+      .def("max", &force_t::tmax, bp::return_value_policy<bp::return_by_value>())
+            .def("__call__", &force_t::operator(), bp::return_value_policy<bp::return_by_value>())
+            .def("derivate", &force_t::derivate, bp::return_value_policy<bp::return_by_value>())
+            .def("set_motion_vector", &force_t::setMotionVector
+                 ,boost::python::args("motionvector"),"sets motion vector for derivate")
+            .def("load_from_file",&force_t::loadFromFile,boost::python::args("filename"),"Loads *this")
+            .def("save_to_file",&force_t::saveToFile,boost::python::args("filename"),"Saves *this")
+        ;
+
+    /** END force curve**/
+
+
+
+
     /** END bezier curve**/
 
 

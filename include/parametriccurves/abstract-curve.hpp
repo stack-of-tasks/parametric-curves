@@ -43,8 +43,8 @@ public:
 
 public:
   /*Getters*/
-  virtual const time_t& tmin() const { return t_min; }
-  virtual const time_t& tmax() const { return t_max; }
+  virtual const time_t tmin() const { return t_min; }
+  virtual const time_t tmax() const { return t_max; }
   virtual bool checkRange(const time_t t) const { return (t>=t_min)&&(t<=t_max); }
 
   /* Setters */
