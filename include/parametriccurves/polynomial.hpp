@@ -30,8 +30,7 @@ namespace parametriccurves
 /// x(t) = a + b(t - t_min_) + ... + d(t - t_min_)^N, where N is the order
 ///
 template<typename Numeric=double, std::size_t Dim=3, 
-         typename Point= Eigen::Matrix<Numeric, Dim, 1>,
-         typename T_Point = std::vector<Point,Eigen::aligned_allocator<Point> > >
+         typename Point= Eigen::Matrix<Numeric, Dim, 1> >
 struct Polynomial :
     public parametriccurves::AbstractCurve<Numeric, Point>
 {
@@ -39,6 +38,7 @@ struct Polynomial :
   typedef Point 	point_t;
   typedef Numeric 	time_t;
   typedef Numeric	num_t;
+  typedef std::vector<Point,Eigen::aligned_allocator<Point> > t_point_t;
   typedef AbstractCurve<Numeric, Point> curve_abc_t;
   typedef Eigen::Matrix<double, Dim, Eigen::Dynamic> coeff_t;
   typedef Eigen::Ref<coeff_t> coeff_t_ref;
@@ -64,7 +64,7 @@ public:
     /// by the size of the coefficients
     ///\param min: LOWER bound on interval definition of the spline
     ///\param max: UPPER bound on interval definition of the spline
-  Polynomial(const T_Point& coefficients, const time_t tmin, const time_t tmax)
+  Polynomial(const t_point_t& coefficients, const time_t tmin, const time_t tmax)
     : curve_abc_t(tmin, tmax),
       coefficients_(init_coeffs(coefficients.begin(), coefficients.end())),
       dim_(Dim), order_(coefficients_.cols()-1)

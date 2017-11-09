@@ -15,7 +15,7 @@ namespace parametriccurves
 {
 typedef Eigen::Vector3d point_t;
 typedef std::vector<point_t,Eigen::aligned_allocator<point_t> >  t_point_t;
-typedef Polynomial  <double, 3, point_t, t_point_t> polynom_t;
+typedef Polynomial  <double, 3, point_t> polynom_t;
 typedef Spline <double, 3, point_t> Spline_t;
 /*typedef spline_deriv_constraint <double, double, 3, true, point_t> spline_deriv_constraint_t;
   typedef bezier_curve  <double, double, 3, true, point_t> bezier_curve_t;

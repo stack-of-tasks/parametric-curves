@@ -39,12 +39,12 @@ T_Point make_cubic_vector(Point const& a, Point const& b, Point const& c, Point 
 }
 
 template<typename Numeric, std::size_t Dim, typename Point, typename T_Point>
-Polynomial<Numeric,Dim,Point,T_Point> create_cubic(Point const& a, Point const& b,
+Polynomial<Numeric,Dim,Point> create_cubic(Point const& a, Point const& b,
                                                    Point const& c, Point const &d,
                                                    const Numeric min, const Numeric max)
 {
-    T_Point coeffs = make_cubic_vector<Point, T_Point>(a,b,c,d);
-    return Polynomial<Numeric,Dim,Point,T_Point>(coeffs.begin(),coeffs.end(), min, max);
+  T_Point coeffs = make_cubic_vector<Point, T_Point>(a,b,c,d);
+    return Polynomial<Numeric,Dim,Point>(coeffs.begin(),coeffs.end(), min, max);
 }
 /// \brief Creates coefficient vector of a quintic spline defined on the interval
 /// [tBegin, tEnd]. It follows the equation
@@ -61,13 +61,13 @@ T_Point make_quintic_vector(Point const& a, Point const& b, Point const& c,
 }
 
 template<typename Numeric, std::size_t Dim, typename Point, typename T_Point>
-Polynomial<Numeric,Dim,Point,T_Point> create_quintic(Point const& a, Point const& b,
+Polynomial<Numeric,Dim,Point> create_quintic(Point const& a, Point const& b,
                                                      Point const& c, Point const &d,
                                                      Point const &e, Point const &f,
                                                      const Numeric min, const Numeric max)  
 {
-    T_Point coeffs = make_quintic_vector<Point, T_Point>(a,b,c,d,e,f);
-    return Polynomial<Numeric,Dim,Point,T_Point>(coeffs.begin(),coeffs.end(), min, max);
+  T_Point coeffs = make_quintic_vector<Point, T_Point>(a,b,c,d,e,f);
+    return Polynomial<Numeric,Dim,Point>(coeffs.begin(),coeffs.end(), min, max);
 }
 
 /// \class Spline
@@ -76,13 +76,12 @@ Polynomial<Numeric,Dim,Point,T_Point> create_quintic(Point const& a, Point const
 ///
 template<typename Numeric=double, std::size_t Dim=Eigen::Dynamic,
          typename Point= Eigen::Matrix<Numeric, Dim, 1>,
-         typename T_Point =std::vector<Point,Eigen::aligned_allocator<Point> >,
-         typename SplineBase=Polynomial<Numeric, Dim, Point, T_Point> >
+         typename SplineBase=Polynomial<Numeric, Dim, Point> >
 struct Spline :
     public AbstractCurve<Numeric, Point>
 {
   typedef Point          point_t;
-  typedef T_Point        t_point_t;
+  typedef std::vector<Point,Eigen::aligned_allocator<Point> > t_point_t;
   typedef Eigen::Matrix<Numeric, Eigen::Dynamic, Eigen::Dynamic> MatrixX;
   typedef Numeric 	time_t;
   typedef Numeric	num_t;
@@ -188,13 +187,13 @@ public:
     d = h5 * x + h6 * b;
     it= wayPointsBegin, next=wayPointsBegin; ++ next;
     for(int i=0; next != wayPointsEnd; ++i, ++it, ++next) {
-      subSplines_.push_back(create_cubic<Numeric,Dim,Point,T_Point>(a.row(i), b.row(i),
-                                                                   c.row(i), d.row(i),
-                                                                   (*it).first, (*next).first));
+      subSplines_.push_back(create_cubic<Numeric,Dim,Point,t_point_t>(a.row(i), b.row(i),
+                                                                      c.row(i), d.row(i),
+                                                                      (*it).first, (*next).first));
     }
-    subSplines_.push_back(create_cubic<Numeric,Dim,Point,T_Point>(a.row(size-1), b.row(size-1),
-                                                                 c.row(size-1), d.row(size-1),
-                                                                 (*it).first, (*it).first));
+    subSplines_.push_back(create_cubic<Numeric,Dim,Point,t_point_t>(a.row(size-1), b.row(size-1),
+                                                                    c.row(size-1), d.row(size-1),
+                                                                    (*it).first, (*it).first));
 
     this->t_min = subSplines_.front().tmin();
     this->t_max = subSplines_.back().tmax();
@@ -272,7 +271,7 @@ private:
         const num_t& init_t = wayPointsBegin->first, end_t = wayPointsNext->first;
         const num_t dt = end_t - init_t, dt_2 = dt * dt, dt_3 = dt_2 * dt;
         const point_t d0 = (a1 - a0 - b0 * dt - c0 * dt_2) / dt_3;
-        subSplines.push_back(create_cubic<Numeric,Dim, Point,T_Point>
+        subSplines.push_back(create_cubic<Numeric,Dim, Point,t_point_t>
                              (a0,b0,c0,d0,init_t, end_t));
         constraints.init_vel = subSplines.back().derivate(end_t, 1);
         constraints.init_acc = subSplines.back().derivate(end_t, 2);
@@ -304,7 +303,7 @@ private:
         rhs = eq.inverse().eval() * rhs;
         d = rhs.row(0); e = rhs.row(1); f = rhs.row(2);
 
-        subSplines.push_back(create_quintic<Numeric,Dim,Point,T_Point>
+        subSplines.push_back(create_quintic<Numeric,Dim,Point,t_point_t>
                              (a0,b0,c0,d,e,f, init_t, end_t));
     }
 
@@ -332,7 +331,7 @@ private:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
-  bool loadSpline(const std::string & filename) throw (std::invalid_argument)
+  bool loadFromFile(const std::string & filename) throw (std::invalid_argument)
   {
     std::ifstream ifs(filename.c_str());
     if(ifs) {
@@ -349,7 +348,7 @@ public:
   }
       
   /// \brief Saved a Derived object as a text file.
-  bool saveSpline(const std::string & filename) const throw (std::invalid_argument)
+  bool saveToFile(const std::string & filename) const throw (std::invalid_argument)
   {
     std::ofstream ofs(filename.c_str());
     if(ofs) {
