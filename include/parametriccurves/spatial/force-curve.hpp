@@ -77,7 +77,7 @@ public:
     return s;
   }
 
-  virtual const force_t derivate(const time_t& t, const std::size_t& order) const
+  virtual const force_t derivate(const time_t& , const std::size_t& ) const
   {
     //TODO: Implement derivative
     return force_t::Zero(Dim);
