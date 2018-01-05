@@ -1,10 +1,10 @@
 //#include "parametriccurves/bezier_curve.h"
-#include <parametriccurves/polynomial.hpp>
-#include <parametriccurves/spline.hpp>
-#include <parametriccurves/spatial/force-curve.hpp>
+#include <parametric-curves/polynomial.hpp>
+#include <parametric-curves/spline.hpp>
+#include <parametric-curves/spatial/force-curve.hpp>
 
 //#include "parametriccurves/splines/spline_deriv_constraint.h"
-#include <parametriccurves/curve-constraint.hpp>
+#include <parametric-curves/curve-constraint.hpp>
 
 #include <vector>
 
