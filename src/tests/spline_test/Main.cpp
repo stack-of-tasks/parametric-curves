@@ -97,7 +97,8 @@ void CubicFunctionTest(bool& error)
   vec.push_back(d);
   polynom_t cf2(vec, 0.5, 1);
   res1 = cf2(0.5);
-  ComparePoints(x0, res1, errMsg + "x3 ", error);
+  point_t x4(3.125,5.25,7.125);
+  ComparePoints(x4, res1, errMsg + "x3 ", error);
   error = true;
   try
     {

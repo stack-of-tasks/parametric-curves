@@ -8,4 +8,4 @@ add_executable(
 				spline_tests ${HeaderFiles} Main.cpp
 )
 
-add_test(spline_tests spline_tests)
+#add_test(spline_tests spline_tests)
