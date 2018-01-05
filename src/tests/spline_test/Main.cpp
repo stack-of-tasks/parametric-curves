@@ -1,9 +1,9 @@
-#include "parametriccurves/spline.hpp"
-#include "parametriccurves/polynomial.hpp"
-/*#include "parametriccurves/bezier_curve.h"
-  #include "parametriccurves/spline_deriv_constraint.h"
-  #include "parametriccurves/helpers/effector_spline.h"
-  #include "parametriccurves/helpers/effector_spline_rotation.h"
+#include "parametric-curves/spline.hpp"
+#include "parametric-curves/polynomial.hpp"
+/*#include "parametric-curves/bezier_curve.h"
+  #include "parametric-curves/spline_deriv_constraint.h"
+  #include "parametric-curves/helpers/effector_spline.h"
+  #include "parametric-curves/helpers/effector_spline_rotation.h"
 */
 #include <string>
 #include <iostream>
