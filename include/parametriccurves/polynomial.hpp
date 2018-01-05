@@ -138,8 +138,14 @@ public:
     if((t < this->t_min || t > this->t_max)){ throw std::out_of_range("TODO");}
     const time_t& dt (t);
     point_t h = coefficients_.col(order_);
-    for(std::size_t i=order_-1; i>=0; i--)
-      h = dt*h + coefficients_.col(i);
+    std::size_t i=order_-1; bool ok=true;
+    while(ok)
+      {
+	h = dt*h + coefficients_.col(i);
+	if (i==0)
+	  ok=false;
+	else i--;
+      }
     return h;
   }
 
