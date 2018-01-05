@@ -229,6 +229,8 @@ public:
         return it->operator()(t);
       }
     }
+    const point_t dummy;
+    return dummy;
   }
 
   virtual const point_t derivate(const time_t& t, const std::size_t& order) const
@@ -241,6 +243,8 @@ public:
         return it->derivate(t, order);
       }
     }
+    const point_t dummy;
+    return dummy;
   }
 
   virtual const std::size_t& size() const
