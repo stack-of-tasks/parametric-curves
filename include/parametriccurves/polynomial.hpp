@@ -107,7 +107,7 @@ private:
   {
     if(this->t_min > this->t_max)
       std::out_of_range("TODO");
-    if(coefficients_.size() != order_+1)
+    if(static_cast<std::size_t>(coefficients_.size()) != order_+1)
       std::runtime_error("Spline order and coefficients do not match");
   }
   
@@ -138,7 +138,7 @@ public:
     if((t < this->t_min || t > this->t_max)){ throw std::out_of_range("TODO");}
     const time_t& dt (t);
     point_t h = coefficients_.col(order_);
-    for(int i=order_-1; i>=0; i--)
+    for(std::size_t i=order_-1; i>=0; i--)
       h = dt*h + coefficients_.col(i);
     return h;
   }
@@ -154,7 +154,7 @@ public:
     const time_t& dt (t);
     time_t cdt(1);
     point_t currentPoint_ = point_t::Zero(dim_);
-    for(int i = order; i < order_+1; ++i, cdt*=dt)
+    for(std::size_t i = order; i < order_+1; ++i, cdt*=dt)
       currentPoint_ += cdt *coefficients_.col(i) * fact(i, order);
     return currentPoint_;
   }
@@ -209,7 +209,7 @@ private:
     std::size_t res(1);
     for(std::size_t i = 0; i < order; ++i)
       res *= n-i;
-    return res;
+    return static_cast<num_t>(res);
   }
   
   /*Attributes*/
