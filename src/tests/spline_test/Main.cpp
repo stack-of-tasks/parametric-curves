@@ -716,20 +716,20 @@ int main(int /*argc*/, char** /*argv[]*/)
 {
   std::cout << "performing tests... \n";
   bool error = false;
-  /*CubicFunctionTest(error);
-    ExactCubicNoErrorTest(error);
-    ExactCubicPointsCrossedTest(error); // checks that given wayPoints are crossed
-    ExactCubicTwoPointsTest(error);
-    ExactCubicOneDimTest(error);
-    ExactCubicVelocityConstraintsTest(error);
-    EffectorTrajectoryTest(error);
-    EffectorSplineRotationNoRotationTest(error);
-    EffectorSplineRotationRotationTest(error);
-    TestReparametrization(error);
-    EffectorSplineRotationWayPointRotationTest(error);
-    BezierCurveTest(error);
-    BezierDerivativeCurveTest(error);
-    BezierDerivativeCurveConstraintTest(error);*/
+  CubicFunctionTest(error);
+  ExactCubicNoErrorTest(error);
+  ExactCubicPointsCrossedTest(error); // checks that given wayPoints are crossed
+  ExactCubicTwoPointsTest(error);
+  ExactCubicOneDimTest(error);
+  ExactCubicVelocityConstraintsTest(error);
+  //  EffectorTrajectoryTest(error);
+  //EffectorSplineRotationNoRotationTest(error);
+  //  EffectorSplineRotationRotationTest(error);
+  //  TestReparametrization(error);
+  //  EffectorSplineRotationWayPointRotationTest(error);
+  //BezierCurveTest(error);
+  //BezierDerivativeCurveTest(error);
+  //BezierDerivativeCurveConstraintTest(error);
   //BezierCurveTestCompareHornerAndBernstein(error);
   if(error)
     {
