@@ -55,8 +55,8 @@ FOREACH(python ${PYTHON_FILES})
     ADDITIONAL_MAKE_CLEAN_FILES
     "${${PROJECT_NAME}_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c")
 
-  INSTALL(FILES
-    "${${PROJECT_NAME}_SOURCE_DIR}/python/${python}"
-    "${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c"
-    DESTINATION ${${PYWRAP}_INSTALL_DIR})
+  # INSTALL(FILES
+  #   "${${PROJECT_NAME}_SOURCE_DIR}/python/${python}"
+  #   "${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c"
+  #   DESTINATION ${${PYWRAP}_INSTALL_DIR})
 ENDFOREACH(python)
