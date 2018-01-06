@@ -1,19 +1,21 @@
 variables:
   GIT_SSL_NO_VERIFY: "true"
-  PROJECT: "parametric-curves"
-  PROJECT_PATH: "stack-of-tasks/${PROJECT}"
-  REGISTRY_IMAGES: "${CI_REGISTRY}/gsaurel/buildfarm"
+
 .build: &build
   before_script:
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "${SSH_DEPLOY_KEY}")
-    - echo "REPOSITORY.${PROJECT}=git ${CI_PROJECT_DIR}" >> /opt/openrobots/etc/robotpkg.conf
+    - echo "REPOSITORY.${CI_PROJECT_NAME}=git ${CI_PROJECT_DIR}" >> /opt/openrobots/etc/robotpkg.conf
   script:
     - /checkout.sh
-    - cd /root/robotpkg/wip/${PROJECT} && make install
-build-14:
-    image: ${REGISTRY_IMAGES}/${PROJECT_PATH}:14.04
+    - cd /root/robotpkg/wip/${CI_PROJECT_NAME} && make install
+
+build-dubnium:
+    image: ${CI_REGISTRY_IMAGE}:dubnium
     <<: *build
+
+build-14:
+    image: ${CI_REGISTRY_IMAGE}:14.04
+    <<: *build
+
 build-16:
-    image: ${REGISTRY_IMAGES}/${PROJECT_PATH}:16.04
+    image: ${CI_REGISTRY_IMAGE}:16.04
     <<: *build
