@@ -186,14 +186,22 @@ public:
     c = h3 * x + h4 * b;
     d = h5 * x + h6 * b;
     it= wayPointsBegin, next=wayPointsBegin; ++ next;
+
     for(int i=0; next != wayPointsEnd; ++i, ++it, ++next) {
-      subSplines_.push_back(create_cubic<Numeric,Dim,Point,t_point_t>(a.row(i), b.row(i),
-                                                                      c.row(i), d.row(i),
-                                                                      (*it).first, (*next).first));
+      Numeric min = (*it).first;
+      Numeric max = (*next).first;
+      Point a_ = a.row(i)-b.row(i)*min+c.row(i)*min*min-d.row(i)*min*min*min;
+      Point b_ = b.row(i)-2*c.row(i)*min + 3*d.row(i)*min*min;
+      Point c_ = c.row(i)-3*d.row(i)*min;
+      Point d_ = d.row(i);
+      subSplines_.push_back(create_cubic<Numeric,Dim,Point,t_point_t>(a_,b_,c_,d_, min, max));
     }
-    subSplines_.push_back(create_cubic<Numeric,Dim,Point,t_point_t>(a.row(size-1), b.row(size-1),
-                                                                    c.row(size-1), d.row(size-1),
-                                                                    (*it).first, (*it).first));
+    Numeric min = (*it).first;
+    Point a_ = a.row(size-1)-b.row(size-1)*min+c.row(size-1)*min*min-d.row(size-1)*min*min*min;
+    Point b_ = b.row(size-1)-2*c.row(size-1)*min + 3*d.row(size-1)*min*min;
+    Point c_ = c.row(size-1)-3*d.row(size-1)*min;
+    Point d_ = d.row(size-1);
+    subSplines_.push_back(create_cubic<Numeric,Dim,Point,t_point_t>(a_,b_,c_,d_,  min, min));
 
     this->t_min = subSplines_.front().tmin();
     this->t_max = subSplines_.back().tmax();
@@ -243,6 +251,7 @@ public:
         return it->derivate(t, order);
       }
     }
+
     const point_t dummy;
     return dummy;
   }
@@ -275,8 +284,14 @@ private:
         const num_t& init_t = wayPointsBegin->first, end_t = wayPointsNext->first;
         const num_t dt = end_t - init_t, dt_2 = dt * dt, dt_3 = dt_2 * dt;
         const point_t d0 = (a1 - a0 - b0 * dt - c0 * dt_2) / dt_3;
-        subSplines.push_back(create_cubic<Numeric,Dim, Point,t_point_t>
-                             (a0,b0,c0,d0,init_t, end_t));
+
+        Point a_ = a0-b0*init_t+c0*init_t*init_t-d0*init_t*init_t*init_t;
+        Point b_ = b0-2*c0*init_t + 3*d0*init_t*init_t;
+        Point c_ = c0-3*d0*init_t;
+        Point d_ = d0;
+        subSplines.push_back(create_cubic<Numeric,Dim,Point,t_point_t>(a_,b_,c_,d_,
+                                                                       init_t, end_t));
+
         constraints.init_vel = subSplines.back().derivate(end_t, 1);
         constraints.init_acc = subSplines.back().derivate(end_t, 2);
     }
@@ -306,9 +321,20 @@ private:
         eq(2,0) = x_d_2; eq(2,1) = x_e_2; eq(2,2) = x_f_2;
         rhs = eq.inverse().eval() * rhs;
         d = rhs.row(0); e = rhs.row(1); f = rhs.row(2);
+        num_t min = init_t;
+        Numeric min2 = min*min;
+        Numeric min3 = min2*min;
+        Numeric min4 = min3*min;
+        Numeric min5 = min4*min;
+        Point a_ = a0-b0*min+c0*min2-d*min3+e*min4-f*min5;
+        Point b_ = b0-2*c0*min+3*d*min2-4*e*min3+5*f*min4;
+        Point c_ = c0-3*d*min+6*e*min2-10*f*min3;
+        Point d_ = d-4*e*min+10*f*min2;
+        Point e_ = e-5*f*min;
+        Point f_ = f;
 
         subSplines.push_back(create_quintic<Numeric,Dim,Point,t_point_t>
-                             (a0,b0,c0,d,e,f, init_t, end_t));
+                             (a_,b_,c_,d_,e_,f_, init_t, end_t));
     }
 
 
