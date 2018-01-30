@@ -31,7 +31,7 @@ ADD_REQUIRED_DEPENDENCY("eigen3 >= 3.0.5")
 SET(BOOST_REQUIERED_COMPONENTS serialization)
 SET(BOOST_OPTIONAL_COMPONENTS "")
 
-OPTION (BUILD_PYTHON_INTERFACE "Build the python binding" OFF)
+OPTION (BUILD_PYTHON_INTERFACE "Build the python binding" ON)
 IF(BUILD_PYTHON_INTERFACE)
   SET(BOOST_OPTIONAL_COMPONENTS ${BOOST_OPTIONAL_COMPONENTS} python)
   FINDPYTHON(2.7 REQUIRED)
@@ -44,39 +44,40 @@ SEARCH_FOR_EIGEN()
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 install(FILES
-#	${CMAKE_SOURCE_DIR}/include/parametric-curves/bernstein.h
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/abstract-curve.hpp
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/MathDefs.h
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/spline.hpp
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/polynomial.hpp
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/infinite-sinusoid.hpp
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/infinite-const-acc.hpp
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/constant.hpp
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/linear-chirp.hpp
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/minimum-jerk.hpp
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/text-file.hpp
-        #	${CMAKE_SOURCE_DIR}/include/parametric-curves/bezier_curve.h
-        ${CMAKE_SOURCE_DIR}/include/parametric-curves/curve-constraint.hpp
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves
-	)
-    
+  #	${CMAKE_SOURCE_DIR}/include/parametric-curves/bernstein.h
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/abstract-curve.hpp
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/MathDefs.h
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/spline.hpp
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/polynomial.hpp
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/infinite-sinusoid.hpp
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/infinite-const-acc.hpp
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/constant.hpp
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/linear-chirp.hpp
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/minimum-jerk.hpp
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/text-file.hpp
+  #	${CMAKE_SOURCE_DIR}/include/parametric-curves/bezier_curve.h
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/curve-constraint.hpp
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves
+  )
+
 install(FILES
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/serialization/eigen-matrix.hpp
-	#${CMAKE_SOURCE_DIR}/include/parametric-curves/serialization/archive.hpp
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/serialization
-        )
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/serialization/eigen-matrix.hpp
+  #${CMAKE_SOURCE_DIR}/include/parametric-curves/serialization/archive.hpp
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/serialization
+  )
 install(FILES
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/spatial/force-curve.hpp
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/spatial
-        )
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/spatial/force-curve.hpp
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/spatial
+  )
 install(FILES
-	${CMAKE_SOURCE_DIR}/include/parametric-curves/utils/file-io.hpp
-	#${CMAKE_SOURCE_DIR}/include/parametric-curves/serialization/archive.hpp
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/utils
-        )
+  ${CMAKE_SOURCE_DIR}/include/parametric-curves/utils/file-io.hpp
+  #${CMAKE_SOURCE_DIR}/include/parametric-curves/serialization/archive.hpp
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/utils
+  )
 
 IF(BUILD_PYTHON_INTERFACE)
-  SET(PYWRAP ${PROJECT_NAME}_pywrap)
+  STRING(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
+  SET(PYWRAP ${PY_NAME}_pywrap)
   ADD_SUBDIRECTORY(python)
 ENDIF(BUILD_PYTHON_INTERFACE)
 
