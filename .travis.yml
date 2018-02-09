@@ -32,7 +32,8 @@ allow_failures:
   - compiler:
 before_install: ./travis_custom/custom_before_install
 install:
-  - make install
+  - pip install --user coveralls
+  - pip install --user numpy
 script:
   - export CMAKE_ADDITIONAL_OPTIONS="-DCMAKE_BUILD_TYPE=${BUILDTYPE}"
   - sudo free -m -t
