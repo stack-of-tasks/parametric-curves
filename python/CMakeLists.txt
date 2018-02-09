@@ -39,8 +39,10 @@ FOREACH(python ${PYTHON_FILES})
   EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E ${LINK}
     ${${PROJECT_NAME}_SOURCE_DIR}/python/${python}
     ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile})
+  
   # Generate pyc file
-  EXECUTE_PROCESS(COMMAND
+  add_custom_target(${pythonFile}c ALL
+    COMMAND
     ${PYTHON_EXECUTABLE} -m py_compile
     ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile})
   # Tag pyc file as generated.
