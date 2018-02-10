@@ -36,12 +36,13 @@ SET(PYTHON_FILES
 
 FOREACH(python ${PYTHON_FILES})
   GET_FILENAME_COMPONENT(pythonFile ${python} NAME)
-  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E ${LINK}
-    ${${PROJECT_NAME}_SOURCE_DIR}/python/${python}
-    ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile})
   
   # Generate pyc file
   add_custom_target(${pythonFile}c ALL
+    COMMAND
+    ${CMAKE_COMMAND} -E ${LINK}
+    ${${PROJECT_NAME}_SOURCE_DIR}/python/${python}
+    ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}
     COMMAND
     ${PYTHON_EXECUTABLE} -m py_compile
     ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile})
