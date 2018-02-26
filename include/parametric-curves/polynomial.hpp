@@ -139,16 +139,21 @@ public:
     const time_t& dt (t);
     point_t h = coefficients_.col(order_);
     std::size_t i=order_-1; bool ok=true;
-    while(ok)
+    if(order_!=0)
+    {
+      while(ok && order_!=0)
       {
-	h = dt*h + coefficients_.col(i);
-	if (i==0)
-	  ok=false;
-	else i--;
+        h = dt*h + coefficients_.col(i);
+        if (i==0)
+          ok=false;
+        else i--;
       }
-    return h;
+      return h;
+    }
+    else
+      return h;
   }
-
+    
 
   ///  \brief Evaluation of the derivative spline at time t.
   ///  \param t : the time when to evaluate the spline
