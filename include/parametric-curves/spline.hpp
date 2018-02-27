@@ -260,6 +260,10 @@ public:
   {
     return subSplines_[0].size();
   }
+  const t_spline_t& getSubsplines() const
+  {
+    return subSplines_;
+  }
 
   virtual bool setInitialPoint(const point_t& /*x_init*/)
   {

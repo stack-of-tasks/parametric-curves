@@ -160,6 +160,18 @@ void spline_from_waypoints(spline_t& self, const coeff_t& array,
     return;
 }
 
+spline_t* spline_by_concatenation_constructor(const bp::list& list_splines)
+{
+  t_spline_t subSplines;
+  subSplines.clear();
+  for(int i=0; i<len(list_splines); ++i) {
+    spline_t _sp = bp::extract<spline_t>(list_splines[i]);
+    const t_spline_t& _vec_subspline = _sp.getSubsplines();
+    subSplines.insert(subSplines.end(), _vec_subspline.begin(), _vec_subspline.end() );
+  }
+  return new spline_t(subSplines);
+}  
+
 spline_t* wrapExactCubicConstructorvoid()
 {
     return new spline_t();
@@ -318,6 +330,7 @@ BOOST_PYTHON_MODULE(libparametric_curves_pywrap)
         ("spline", no_init)
             .def("__init__", make_constructor(&wrapExactCubicConstructorvoid))
             .def("__init__", make_constructor(&wrapExactCubicConstructorPolySequence))
+            .def("__init__", make_constructor(&spline_by_concatenation_constructor))
       .def("min", &spline_t::tmin, bp::return_value_policy<bp::return_by_value>())
       .def("max", &spline_t::tmax, bp::return_value_policy<bp::return_by_value>())
             .def("__call__", &spline_t::operator(), bp::return_value_policy<bp::return_by_value>())
