@@ -1,21 +1,51 @@
 variables:
   GIT_SSL_NO_VERIFY: "true"
+  GIT_SUBMODULE_STRATEGY: "recursive"
+  GIT_DEPTH: "3"
+  NAMESPACE: stack-of-tasks
+  PROJECT: parametric-curves
+  IMAGE: "${CI_REGISTRY}/${NAMESPACE}/${PROJECT}"
 
-.build: &build
+cache:
+  paths:
+    - build/ccache
+
+
+.robotpkg-parametric-curves: &robotpkg-parametric-curves
+  variables:
+    ROBOTPKG: parametric-curves
+    CATEGORY: wip
   before_script:
-    - echo "REPOSITORY.${CI_PROJECT_NAME}=git ${CI_PROJECT_DIR}" >> /opt/openrobots/etc/robotpkg.conf
+    - mkdir -p build/ccache
+    - cd build
+    - export CCACHE_BASEDIR=${PWD}
+    - export CCACHE_DIR=${PWD}/ccache
   script:
-    - /checkout.sh
-    - cd /root/robotpkg/wip/${CI_PROJECT_NAME} && make install
+    - cd /root/robotpkg/${CATEGORY}/${ROBOTPKG}
+    - git pull
+    - echo "MASTER_REPOSITORY = git ${CI_PROJECT_DIR}" >> Makefile
+    - echo "REPOSITORY.parametric-curves = git ${CI_PROJECT_DIR}" >> /opt/openrobots/etc/robotpkg.conf
+    - make checkout
+    - make install
+    - cd work.*/${PROJECT}*/
+    - make test
+    - make doc
+  except:
+    - gh-pages
 
-build-dubnium:
-    image: ${CI_REGISTRY_IMAGE}:dubnium
-    <<: *build
 
-build-14:
-    image: ${CI_REGISTRY_IMAGE}:14.04
-    <<: *build
+robotpkg-parametric-curves-14.04:
+  <<: *robotpkg-parametric-curves
+  image: ${IMAGE}:14.04
 
-build-16:
-    image: ${CI_REGISTRY_IMAGE}:16.04
-    <<: *build
+robotpkg-parametric-curves-16.04:
+  <<: *robotpkg-parametric-curves
+  image: ${IMAGE}:16.04
+
+robotpkg-parametric-curves-17.10:
+  <<: *robotpkg-parametric-curves
+  image: ${IMAGE}:17.10
+
+robotpkg-parametric-curves-dubnium:
+  <<: *robotpkg-parametric-curves
+  image: ${IMAGE}:dubnium
