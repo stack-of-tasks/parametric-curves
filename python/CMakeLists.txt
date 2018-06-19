@@ -40,6 +40,7 @@ FOREACH(python ${PYTHON_FILES})
     DESTINATION ${${PYWRAP}_INSTALL_DIR})
 ENDFOREACH(python)
 
-ADD_PYTHON_UNIT_TEST("py-spline" "python/test/test.py" "python")
+#ADD_PYTHON_UNIT_TEST("py-spline" "python/test/test.py" "python")
+ADD_PYTHON_UNIT_TEST("py-quick" "python/test/quick.py" "python")
+
 ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND})
-ADD_DEPENDENCIES(check "py-spline")
