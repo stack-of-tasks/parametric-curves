@@ -1,4 +1,4 @@
-from parametric_curves import polynomial, curve_constraints, forcecurve, spline
+from libparametric_curves_pywrap import polynomial, curve_constraints, forcecurve, spline
 
 from numpy import matrix
 
