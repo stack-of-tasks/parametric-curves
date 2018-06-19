@@ -1,1 +1,1 @@
-from libparametric_curves_pywrap import *
+from .libparametric_curves_pywrap import *

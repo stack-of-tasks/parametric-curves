@@ -35,31 +35,10 @@ SET(PYTHON_FILES
   )
 
 FOREACH(python ${PYTHON_FILES})
-  GET_FILENAME_COMPONENT(pythonFile ${python} NAME)
-  
-  # Generate pyc file
-  add_custom_target(${pythonFile}c ALL
-    COMMAND
-    ${CMAKE_COMMAND} -E ${LINK}
-    ${${PROJECT_NAME}_SOURCE_DIR}/python/${python}
-    ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}
-    COMMAND
-    ${PYTHON_EXECUTABLE} -m py_compile
-    ${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile})
-  # Tag pyc file as generated.
-
-  SET_SOURCE_FILES_PROPERTIES(
-    "${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c"
-    PROPERTIES GENERATED TRUE)
-
-  # Clean generated files.
-  SET_PROPERTY(
-    DIRECTORY APPEND PROPERTY
-    ADDITIONAL_MAKE_CLEAN_FILES
-    "${${PROJECT_NAME}_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c")
-
   INSTALL(FILES
     "${${PROJECT_NAME}_SOURCE_DIR}/python/${python}"
-    "${CMAKE_BINARY_DIR}/bindings/python/${PROJECT_NAME}/${pythonFile}c"
     DESTINATION ${${PYWRAP}_INSTALL_DIR})
 ENDFOREACH(python)
+
+#ADD_PYTHON_UNIT_TEST("py-spline" "python/test/test.py" "bindings/python/parametric-curves")
+ADD_PYTHON_UNIT_TEST("py-quick" "python/test/quick.py" "bindings/python/parametric-curves")

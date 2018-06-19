@@ -4,6 +4,7 @@ INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
 INCLUDE(cmake/eigen.cmake)
 INCLUDE(cmake/python.cmake)
+INCLUDE(cmake/test.cmake)
 
 SET(PROJECT_NAME parametric-curves)
 SET(PROJECT_DESCRIPTION "Template based classes for creating and manipulating parametric curves. Comes with extra options specific to end-effector trajectories in robotics." )
@@ -34,7 +35,7 @@ SET(BOOST_OPTIONAL_COMPONENTS "")
 OPTION (BUILD_PYTHON_INTERFACE "Build the python binding" ON)
 IF(BUILD_PYTHON_INTERFACE)
   SET(BOOST_OPTIONAL_COMPONENTS ${BOOST_OPTIONAL_COMPONENTS} python)
-  FINDPYTHON(2.7 REQUIRED)
+  FINDPYTHON()
   INCLUDE_DIRECTORIES( ${PYTHON_INCLUDE_DIRS} )
 ENDIF(BUILD_PYTHON_INTERFACE)
 
@@ -83,6 +84,7 @@ ENDIF(BUILD_PYTHON_INTERFACE)
 
 ADD_SUBDIRECTORY (src/tests/spline_test)
 
+ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 PKG_CONFIG_APPEND_BOOST_LIBS(${BOOST_REQUIERED_COMPONENTS})
 SETUP_PROJECT_FINALIZE()
