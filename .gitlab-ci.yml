@@ -1,51 +1,99 @@
 variables:
-  GIT_SSL_NO_VERIFY: "true"
   GIT_SUBMODULE_STRATEGY: "recursive"
   GIT_DEPTH: "3"
-  NAMESPACE: stack-of-tasks
-  PROJECT: parametric-curves
-  IMAGE: "${CI_REGISTRY}/${NAMESPACE}/${PROJECT}"
+  CCACHE_BASEDIR: "${CI_PROJECT_DIR}"
+  CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
 
 cache:
   paths:
-    - build/ccache
-
+    - ccache
 
 .robotpkg-parametric-curves: &robotpkg-parametric-curves
-  variables:
-    ROBOTPKG: parametric-curves
-    CATEGORY: wip
-  before_script:
-    - mkdir -p build/ccache
-    - cd build
-    - export CCACHE_BASEDIR=${PWD}
-    - export CCACHE_DIR=${PWD}/ccache
-  script:
-    - cd /root/robotpkg/${CATEGORY}/${ROBOTPKG}
-    - git pull
-    - echo "MASTER_REPOSITORY = git ${CI_PROJECT_DIR}" >> Makefile
-    - echo "REPOSITORY.parametric-curves = git ${CI_PROJECT_DIR}" >> /opt/openrobots/etc/robotpkg.conf
-    - make checkout
-    - make install
-    - cd work.*/${PROJECT}*/
-    - make test
-    - make doc
   except:
     - gh-pages
+  script:
+    - mkdir -p ccache
+    - cd /root/robotpkg/wip/parametric-curves
+    - git pull
+    - make checkout MASTER_REPOSITORY="dir ${CI_PROJECT_DIR}"
+    - make install
+    - cd work.$(hostname)/$(make show-var VARNAME=DISTNAME)
+    - make check
+    - make doc
+    - mv doc/doxygen-html ${CI_PROJECT_DIR}
 
 
-robotpkg-parametric-curves-14.04:
+robotpkg-parametric-curves-16.04-release:
   <<: *robotpkg-parametric-curves
-  image: ${IMAGE}:14.04
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:16.04
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - doxygen-html/
 
-robotpkg-parametric-curves-16.04:
+robotpkg-parametric-curves-dubnium-release:
   <<: *robotpkg-parametric-curves
-  image: ${IMAGE}:16.04
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:dubnium
 
-robotpkg-parametric-curves-17.10:
+robotpkg-parametric-curves-18.04-release:
   <<: *robotpkg-parametric-curves
-  image: ${IMAGE}:17.10
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:18.04
 
-robotpkg-parametric-curves-dubnium:
+robotpkg-parametric-curves-14.04-release:
   <<: *robotpkg-parametric-curves
-  image: ${IMAGE}:dubnium
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:14.04
+
+
+.robotpkg-py-parametric-curves: &robotpkg-py-parametric-curves
+  except:
+    - gh-pages
+  script:
+    - mkdir -p ccache
+    - cd /root/robotpkg/wip/py-parametric-curves
+    - git pull
+    - make checkout MASTER_REPOSITORY="dir ${CI_PROJECT_DIR}"
+    - make install
+    - cd work.$(hostname)/$(make show-var VARNAME=DISTNAME)
+    - make check
+    - make doc
+    - mv doc/doxygen-html ${CI_PROJECT_DIR}
+
+
+robotpkg-py-parametric-curves-14.04-release:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves:14.04
+
+robotpkg-py-parametric-curves-py3-14.04-release:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves-py3:14.04
+
+robotpkg-py-parametric-curves-dubnium-release:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves:dubnium
+
+robotpkg-py-parametric-curves-py3-dubnium-release:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves-py3:dubnium
+
+robotpkg-py-parametric-curves-16.04-release:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves:16.04
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - doxygen-html/
+
+robotpkg-py-parametric-curves-py3-16.04-release:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves-py3:16.04
+
+robotpkg-py-parametric-curves-18.04-release:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves:18.04
+
+robotpkg-py-parametric-curves-py3-18.04-release:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves-py3:18.04
+
+
+
