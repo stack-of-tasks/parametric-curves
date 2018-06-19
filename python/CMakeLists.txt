@@ -42,5 +42,3 @@ ENDFOREACH(python)
 
 #ADD_PYTHON_UNIT_TEST("py-spline" "python/test/test.py" "bindings/python/parametric-curves")
 ADD_PYTHON_UNIT_TEST("py-quick" "python/test/quick.py" "bindings/python/parametric-curves")
-
-ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND})
