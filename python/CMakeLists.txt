@@ -39,3 +39,5 @@ FOREACH(python ${PYTHON_FILES})
     "${${PROJECT_NAME}_SOURCE_DIR}/python/${python}"
     DESTINATION ${${PYWRAP}_INSTALL_DIR})
 ENDFOREACH(python)
+
+ADD_PYTHON_UNIT_TEST("py-splite" "python/test/test.py" "python")

@@ -4,6 +4,7 @@ INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
 INCLUDE(cmake/eigen.cmake)
 INCLUDE(cmake/python.cmake)
+INCLUDE(cmake/test.cmake)
 
 SET(PROJECT_NAME parametric-curves)
 SET(PROJECT_DESCRIPTION "Template based classes for creating and manipulating parametric curves. Comes with extra options specific to end-effector trajectories in robotics." )
