@@ -19,17 +19,10 @@ cache:
     - make install
     - cd work.$(hostname)/$(make show-var VARNAME=DISTNAME)
     - make check
-    - make doc
-    - mv doc/doxygen-html ${CI_PROJECT_DIR}
-
 
 robotpkg-parametric-curves-16.04-release:
   <<: *robotpkg-parametric-curves
   image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:16.04
-  artifacts:
-    expire_in: 1 day
-    paths:
-      - doxygen-html/
 
 robotpkg-parametric-curves-dubnium-release:
   <<: *robotpkg-parametric-curves
@@ -43,7 +36,6 @@ robotpkg-parametric-curves-14.04-release:
   <<: *robotpkg-parametric-curves
   image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:14.04
 
-
 .robotpkg-py-parametric-curves: &robotpkg-py-parametric-curves
   except:
     - gh-pages
@@ -55,9 +47,6 @@ robotpkg-parametric-curves-14.04-release:
     - make install
     - cd work.$(hostname)/$(make show-var VARNAME=DISTNAME)
     - make check
-    - make doc
-    - mv doc/doxygen-html ${CI_PROJECT_DIR}
-
 
 robotpkg-py-parametric-curves-14.04-release:
   <<: *robotpkg-py-parametric-curves
@@ -78,10 +67,6 @@ robotpkg-py-parametric-curves-py3-dubnium-release:
 robotpkg-py-parametric-curves-16.04-release:
   <<: *robotpkg-py-parametric-curves
   image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves:16.04
-  artifacts:
-    expire_in: 1 day
-    paths:
-      - doxygen-html/
 
 robotpkg-py-parametric-curves-py3-16.04-release:
   <<: *robotpkg-py-parametric-curves
@@ -95,5 +80,22 @@ robotpkg-py-parametric-curves-py3-18.04-release:
   <<: *robotpkg-py-parametric-curves
   image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves-py3:18.04
 
-
+doc-coverage:
+  <<: *robotpkg-py-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves:16.04
+  before_script:
+    - echo -e 'CXXFLAGS+= --coverage\nLDFLAGS+= --coverage\nPKG_DEFAULT_OPTIONS= debug' >> /opt/openrobots/etc/robotpkg.conf
+  after_script:
+    - cd /root/robotpkg/wip/py-parametric-curves
+    - cd work.$(hostname)/$(make show-var VARNAME=DISTNAME)
+    - make doc
+    - mv doc/doxygen-html ${CI_PROJECT_DIR}
+    - mkdir -p ${CI_PROJECT_DIR}/coverage/
+    - gcovr -r .
+    - gcovr -r . --html --html-details -o ${CI_PROJECT_DIR}/coverage/index.html
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - doxygen-html/
+      - coverage/
 
