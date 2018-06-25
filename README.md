@@ -1,6 +1,9 @@
 Spline
 ===================
 
+[![Build Status](https://travis-ci.org/stack-of-tasks/parametric-curves.svg?branch=master)](https://travis-ci.org/stack-of-tasks/parametric-curves)
+[![Pipeline status](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/pipeline.svg)](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/commits/master)
+[![Coverage report](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/coverage.svg?job=coverage)](http://projects.laas.fr/gepetto/doc/stack-of-tasks/parametric-curves/master/coverage/)
 
 A template-based Library for creating curves of arbitrary order and dimension, eventually subject to derivative constraints. The main use of the library is the creation of end-effector trajectories for legged robots.
 
@@ -12,7 +15,7 @@ To do so, tools are provided to:
 
 The library is template-based, thus generic:  the curves can be of any dimension, and can be implemented in double, float  ...
 
-While a Bezier curve implementation is provided, the main interest 
+While a Bezier curve implementation is provided, the main interest
 of this library is to create spline curves of arbitrary order
 
 ----------
@@ -75,14 +78,14 @@ The library is header only, so the build only serves to build the tests and pyth
 
 ```
 	cd $SPLINE_DIR && mkdir build && cd build
-	cmake .. && make 
+	cmake .. && make
 	../bin/tests
 ```
 
 If everything went fine you should obtain the following output:
 ```
-performing tests... 
-no errors found 
+performing tests...
+no errors found
 ```
 ### Optional: Python bindings installation
 To install the Python bindings, in the CMakeLists.txt file, first enable the BUILD_PYTHON_INTERFACE option:
