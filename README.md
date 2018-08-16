@@ -1,9 +1,9 @@
 Spline
 ===================
 
-[![Build Status](https://travis-ci.org/stack-of-tasks/parametric-curves.svg?branch=master)](https://travis-ci.org/stack-of-tasks/parametric-curves)
+[![Building Status](https://travis-ci.org/stack-of-tasks/parametric-curves.svg?branch=master)](https://travis-ci.org/stack-of-tasks/parametric-curves)
 [![Pipeline status](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/pipeline.svg)](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/commits/master)
-[![Coverage report](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/coverage.svg?job=coverage)](http://projects.laas.fr/gepetto/doc/stack-of-tasks/parametric-curves/master/coverage/)
+[![Coverage report](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/coverage.svg?job=doc-coverage)](http://projects.laas.fr/gepetto/doc/stack-of-tasks/parametric-curves/master/coverage/)
 
 A template-based Library for creating curves of arbitrary order and dimension, eventually subject to derivative constraints. The main use of the library is the creation of end-effector trajectories for legged robots.
 

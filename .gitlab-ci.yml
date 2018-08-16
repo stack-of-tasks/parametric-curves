@@ -18,23 +18,19 @@ cache:
     - make checkout MASTER_REPOSITORY="dir ${CI_PROJECT_DIR}"
     - make install
     - cd work.$(hostname)/$(make show-var VARNAME=DISTNAME)
-    - make check
+    - make test
+
+robotpkg-parametric-curves-14.04-release:
+  <<: *robotpkg-parametric-curves
+  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:14.04
 
 robotpkg-parametric-curves-16.04-release:
   <<: *robotpkg-parametric-curves
   image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:16.04
 
-robotpkg-parametric-curves-dubnium-release:
-  <<: *robotpkg-parametric-curves
-  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:dubnium
-
 robotpkg-parametric-curves-18.04-release:
   <<: *robotpkg-parametric-curves
   image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:18.04
-
-robotpkg-parametric-curves-14.04-release:
-  <<: *robotpkg-parametric-curves
-  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/parametric-curves:14.04
 
 .robotpkg-py-parametric-curves: &robotpkg-py-parametric-curves
   except:
@@ -46,7 +42,7 @@ robotpkg-parametric-curves-14.04-release:
     - make checkout MASTER_REPOSITORY="dir ${CI_PROJECT_DIR}"
     - make install
     - cd work.$(hostname)/$(make show-var VARNAME=DISTNAME)
-    - make check
+    - make test
 
 robotpkg-py-parametric-curves-14.04-release:
   <<: *robotpkg-py-parametric-curves
@@ -55,14 +51,6 @@ robotpkg-py-parametric-curves-14.04-release:
 robotpkg-py-parametric-curves-py3-14.04-release:
   <<: *robotpkg-py-parametric-curves
   image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves-py3:14.04
-
-robotpkg-py-parametric-curves-dubnium-release:
-  <<: *robotpkg-py-parametric-curves
-  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves:dubnium
-
-robotpkg-py-parametric-curves-py3-dubnium-release:
-  <<: *robotpkg-py-parametric-curves
-  image: eur0c.laas.fr:5000/stack-of-tasks/parametric-curves/py-parametric-curves-py3:dubnium
 
 robotpkg-py-parametric-curves-16.04-release:
   <<: *robotpkg-py-parametric-curves
