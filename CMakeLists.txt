@@ -10,6 +10,8 @@ SET(PROJECT_NAME parametric-curves)
 SET(PROJECT_DESCRIPTION "Template based classes for creating and manipulating parametric curves. Comes with extra options specific to end-effector trajectories in robotics." )
 SET(PROJECT_URL "http://github.com/stack-of-tasks/parameteric-curves")
 
+SET(DOXYGEN_USE_MATHJAX yes)
+
 
 #set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/build/")
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/")
