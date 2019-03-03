@@ -15,7 +15,7 @@ namespace parametriccurves
 
 /// \class TextFile.
 /// \brief Loads curve from file
-template<typename Numeric=double, std::size_t Dim=Eigen::Dynamic,
+template<typename Numeric=double, Eigen::Index Dim=Eigen::Dynamic,
          typename Point= Eigen::Matrix<Numeric, Dim, 1> >
 struct TextFile :
     public AbstractCurve<Numeric, Point>

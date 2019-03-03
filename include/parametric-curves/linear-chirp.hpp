@@ -21,7 +21,7 @@ namespace parametriccurves
        *  In particular the frequency starts from a value f0 and it increases linearly
        *  up to a value f1. Then it goes back to f0 and the trajectory is ended.
        */
-template<typename Numeric=double, std::size_t Dim=1,
+template<typename Numeric=double, Eigen::Index Dim=1,
          typename Point= Eigen::Matrix<Numeric, Dim, 1> >
 struct LinearChirp :
     public AbstractCurve<Numeric, Point>

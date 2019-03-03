@@ -38,7 +38,7 @@ T_Point make_cubic_vector(Point const& a, Point const& b, Point const& c, Point 
     return res;
 }
 
-template<typename Numeric, std::size_t Dim, typename Point, typename T_Point>
+template<typename Numeric, Eigen::Index Dim, typename Point, typename T_Point>
 Polynomial<Numeric,Dim,Point> create_cubic(Point const& a, Point const& b,
                                                    Point const& c, Point const &d,
                                                    const Numeric min, const Numeric max)
@@ -60,7 +60,7 @@ T_Point make_quintic_vector(Point const& a, Point const& b, Point const& c,
     return res;
 }
 
-template<typename Numeric, std::size_t Dim, typename Point, typename T_Point>
+template<typename Numeric, Eigen::Index Dim, typename Point, typename T_Point>
 Polynomial<Numeric,Dim,Point> create_quintic(Point const& a, Point const& b,
                                                      Point const& c, Point const &d,
                                                      Point const &e, Point const &f,
@@ -74,7 +74,7 @@ Polynomial<Numeric,Dim,Point> create_quintic(Point const& a, Point const& b,
 /// \brief Represents a set of cubic splines defining a continuous function 
 /// crossing each of the waypoint given in its initialization
 ///
-template<typename Numeric=double, std::size_t Dim=Eigen::Dynamic,
+template<typename Numeric=double, Eigen::Index Dim=Eigen::Dynamic,
          typename Point= Eigen::Matrix<Numeric, Dim, 1>,
          typename SplineBase=Polynomial<Numeric, Dim, Point> >
 struct Spline :

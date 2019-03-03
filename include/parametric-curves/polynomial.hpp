@@ -29,7 +29,7 @@ namespace parametriccurves
 /// [tBegin, tEnd]. It follows the equation
 /// x(t) = a + b(t - t_min_) + ... + d(t - t_min_)^N, where N is the order
 ///
-template<typename Numeric=double, std::size_t Dim=3, 
+template<typename Numeric=double, Eigen::Index Dim=3, 
          typename Point= Eigen::Matrix<Numeric, Dim, 1> >
 struct Polynomial :
     public parametriccurves::AbstractCurve<Numeric, Point>

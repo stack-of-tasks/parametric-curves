@@ -17,7 +17,7 @@ namespace parametriccurves
       /** \class MinimumJerk
        *  \brief Creates MinimumJerk curve
        */
-template<typename Numeric=double, std::size_t Dim=1,
+template<typename Numeric=double, Eigen::Index Dim=1,
          typename Point= Eigen::Matrix<Numeric, Dim, 1> >
 struct MinimumJerk :
     public AbstractCurve<Numeric, Point>

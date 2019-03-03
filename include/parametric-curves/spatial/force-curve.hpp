@@ -27,7 +27,7 @@ namespace spatial
 
 using parametriccurves::Spline;
 /// \class ForceCurve
-/// \brief Representation of a spatial vector curve in the form of splines 
+/// \brief Representation of a spatial vector curve in the form of splines
 /// Returns Plucker coordinates in the form of (Linear(3), Angular(3))
 ///
 template<typename Numeric=double>
@@ -50,7 +50,7 @@ public:
     : curve_abc_t()
   {
   }
-  
+
   ///\brief Constructor
   ///\param subSplines: vector of subsplines
   ForceCurve(const spline_lin_t &linPart_, const spline_ang_t &angPart_)
@@ -58,17 +58,17 @@ public:
       linPart(linPart_),
       angPart(angPart_),
       motionVector(motion_t::Zero()) {}
-  
+
   ///\brief Copy Constructor
   ForceCurve(const ForceCurve &other)
     : curve_abc_t(other.linPart.tmin(), other.linPart.tmax()),
       linPart(other.linPart),
       angPart(other.angPart),
       motionVector(motion_t::Zero()) {}
-  
+
   ///\brief Destructor
   ~ForceCurve(){}
-  
+
 public:
   virtual const force_t operator()(const time_t& t) const
   {
@@ -102,7 +102,7 @@ public:
   {
     return false;
   }
-  
+
 protected:
   /*Attributes*/
   spline_lin_t linPart; // const
@@ -112,7 +112,7 @@ protected:
 private:
 
   // Serialization of the class
-  friend class boost::serialization::access;  
+  friend class boost::serialization::access;
   template<class Archive>
   void save(Archive & ar, const unsigned int /*version*/) const
   {
@@ -121,7 +121,7 @@ private:
 
     return;
   }
-  
+
   template<class Archive>
   void load(Archive & ar, const unsigned int /*version*/)
   {
@@ -136,7 +136,7 @@ private:
     assert(this->t_max == angPart.tmax());
     return;
   }
-  
+
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
@@ -155,7 +155,7 @@ public:
     }
     return true;
   }
-      
+
   /// \brief Saved a Derived object as a text file.
   bool saveToFile(const std::string & filename) const throw (std::invalid_argument)
   {

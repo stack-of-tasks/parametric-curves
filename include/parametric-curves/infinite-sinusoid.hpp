@@ -18,7 +18,7 @@ namespace parametriccurves
 /// \brief Creates InfiniteSinusoid curve
 /// The sinusoid is actually a cosine so that it starts with zero velocity.
 /// Returns x = x_init + A*cos(2*pi*f*t) where f is give by 1/(2*traj_time)
-template<typename Numeric=double, std::size_t Dim=1,
+template<typename Numeric=double, Eigen::Index Dim=1,
          typename Point= Eigen::Matrix<Numeric, Dim, 1> >
 struct InfiniteSinusoid :
     public AbstractCurve<Numeric, Point>

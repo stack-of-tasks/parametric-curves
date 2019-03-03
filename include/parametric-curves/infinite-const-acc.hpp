@@ -19,7 +19,7 @@ namespace parametriccurves
 /// \brief Creates InfiniteConstAcc curve
 /// s = s_0 + u_0*t+0.5*a_0*t^2
 
-template<typename Numeric=double, std::size_t Dim=1,
+template<typename Numeric=double, Eigen::Index Dim=1,
          typename Point= Eigen::Matrix<Numeric, Dim, 1> >
 struct InfiniteConstAcc :
     public AbstractCurve<Numeric, Point>

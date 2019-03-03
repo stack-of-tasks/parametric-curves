@@ -258,15 +258,15 @@ void set_end_acc(curve_constraints_t& c, const point_t& val)
 BOOST_PYTHON_MODULE(libparametric_curves_pywrap)
 {
     /** BEGIN eigenpy init**/
-    eigenpy::enableEigenPy();
+    //eigenpy::enableEigenPy();
 
-    eigenpy::enableEigenPySpecific<point_t,point_t>();
-    eigenpy::enableEigenPySpecific<ret_point_t,ret_point_t>();
-    eigenpy::enableEigenPySpecific<point_list_t,point_list_t>();
-    eigenpy::enableEigenPySpecific<point6_t,point6_t>();
-    eigenpy::enableEigenPySpecific<ret_point6_t,ret_point6_t>();
-    eigenpy::enableEigenPySpecific<point_list6_t,point_list6_t>();
-    eigenpy::enableEigenPySpecific<coeff_t,coeff_t>();
+    eigenpy::enableEigenPySpecific<point_t>();
+    eigenpy::enableEigenPySpecific<ret_point_t>();
+    eigenpy::enableEigenPySpecific<point_list_t>();
+    eigenpy::enableEigenPySpecific<point6_t>();
+    eigenpy::enableEigenPySpecific<ret_point6_t>();
+    eigenpy::enableEigenPySpecific<point_list6_t>();
+    eigenpy::enableEigenPySpecific<coeff_t>();
     /*eigenpy::exposeAngleAxis();
     eigenpy::exposeQuaternion();*/
     /** END eigenpy init**/

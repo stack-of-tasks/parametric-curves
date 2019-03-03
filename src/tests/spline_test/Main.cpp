@@ -68,6 +68,7 @@ void ComparePoints(const Eigen::VectorXd& pt1, const Eigen::VectorXd& pt2, const
 
 void CubicFunctionTest(bool& error)
 {
+  Spline<double,Eigen::Dynamic> test;
   std::string errMsg("In test CubicFunctionTest ; unexpected result for x ");
   point_t a(1,2,3);
   point_t b(2,3,4);
@@ -446,6 +447,7 @@ void ExactCubicTwoPointsTest(bool& error)
 
 void ExactCubicOneDimTest(bool& error)
 {
+
   T_WaypointOne waypoints;
   point_one zero; zero(0,0) = 9;
   point_one one; one(0,0) = 14;
