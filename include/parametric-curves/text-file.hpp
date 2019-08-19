@@ -70,8 +70,14 @@ public:
     {
       std::cout<<"Setting derivatives to zero"<<std::endl;
       posValues = data;
-      velValues.setZero();
-      accValues.setZero();
+      velValues.setZero(size);
+      accValues.setZero(size);
+    }
+    else if (data.cols()==2*size)
+    {
+      posValues = data.leftCols(size);
+      velValues = data.rightCols(size);
+      accValues = accValues.setZero(size);
     }
     else if (data.cols()==3*size)
     {
