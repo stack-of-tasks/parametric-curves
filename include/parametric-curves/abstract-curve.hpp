@@ -8,6 +8,7 @@
 * Interface for a curve
 */
 #include <cstddef>
+#include <iostream>
 
 #ifndef _parameteric_curves_abstract_curve_hpp
 #define _parameteric_curves_abstract_curve_hpp
