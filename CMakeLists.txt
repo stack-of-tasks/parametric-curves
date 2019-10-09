@@ -1,4 +1,9 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+SET(PROJECT_NAMESPACE stack-of-tasks)
+SET(PROJECT_NAME parametric-curves)
+SET(PROJECT_DESCRIPTION "Template based classes for creating and manipulating parametric curves. Comes with extra options specific to end-effector trajectories in robotics." )
+SET(PROJECT_URL "http://github.com/${PROJECT_NAMESPACE}/${PROJECT_NAME}")
 
 INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
@@ -6,19 +11,12 @@ INCLUDE(cmake/eigen.cmake)
 INCLUDE(cmake/python.cmake)
 INCLUDE(cmake/test.cmake)
 
-SET(PROJECT_NAMESPACE stack-of-tasks)
-SET(PROJECT_NAME parametric-curves)
-SET(PROJECT_DESCRIPTION "Template based classes for creating and manipulating parametric curves. Comes with extra options specific to end-effector trajectories in robotics." )
-SET(PROJECT_URL "http://github.com/${PROJECT_NAMESPACE}/${PROJECT_NAME}")
-
 SET(DOXYGEN_USE_MATHJAX yes)
 SET(CUSTOM_HEADER_DIR ${PROJECT_NAME})
-
-# Disable -Werror on Unix for now.
 SET(CXX_DISABLE_WERROR True)
 SET(CMAKE_VERBOSE_MAKEFILE True)
 
-SETUP_PROJECT()
+PROJECT(${PROJECT_NAME} CXX)
 
 ADD_REQUIRED_DEPENDENCY("eigen3 >= 3.0.5")
 SET(BOOST_REQUIERED_COMPONENTS serialization)
@@ -49,4 +47,3 @@ ADD_SUBDIRECTORY (src/tests/spline_test)
 ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 PKG_CONFIG_APPEND_BOOST_LIBS(${BOOST_REQUIERED_COMPONENTS})
-SETUP_PROJECT_FINALIZE()
