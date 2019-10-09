@@ -1,5 +1,5 @@
 install(FILES
-  #	bernstein.h
+  #bernstein.h
   abstract-curve.hpp
   MathDefs.h
   spline.hpp
@@ -10,22 +10,22 @@ install(FILES
   linear-chirp.hpp
   minimum-jerk.hpp
   text-file.hpp
-  #	bezier_curve.h
+  #bezier_curve.h
   curve-constraint.hpp
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves
+  DESTINATION include/${CUSTOM_HEADER_DIR}
   )
 
 install(FILES
   serialization/eigen-matrix.hpp
-  #${CMAKE_SOURCE_DIR}/include/parametric-curves/serialization/archive.hpp
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/serialization
+  #serialization/archive.hpp
+  #serialization/archive.hpp
+  DESTINATION include/${CUSTOM_HEADER_DIR}/serialization
   )
 install(FILES
   spatial/force-curve.hpp
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/spatial
+  DESTINATION include/${CUSTOM_HEADER_DIR}/spatial
   )
 install(FILES
   utils/file-io.hpp
-  #${CMAKE_SOURCE_DIR}/include/parametric-curves/serialization/archive.hpp
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/parametric-curves/utils
+  DESTINATION include/${CUSTOM_HEADER_DIR}/utils
   )
