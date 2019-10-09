@@ -1,73 +1,57 @@
 /**
-* \file sinusoid.hpp
-* \brief Generates InfiniteSinusoidal trajectory
-* \author Rohan Budhiraja
-* \date 2017
-*
-*/
+ * \file sinusoid.hpp
+ * \brief Generates InfiniteSinusoidal trajectory
+ * \author Rohan Budhiraja
+ * \date 2017
+ *
+ */
 
 #ifndef _parameteric_curves_constant_hpp
 #define _parameteric_curves_constant_hpp
 
 #include <parametric-curves/abstract-curve.hpp>
 
-namespace parametriccurves
-{
+namespace parametriccurves {
 
 /// \class InfiniteSinusoid
 /// \brief Creates InfiniteSinusoid curve
 /// The sinusoid is actually a cosine so that it starts with zero velocity.
 /// Returns x = x_init + A*cos(2*pi*f*t) where f is give by 1/(2*traj_time)
-template<typename Numeric=double, Eigen::Index Dim=1,
-         typename Point= Eigen::Matrix<Numeric, Dim, 1> >
-struct Constant :
-    public AbstractCurve<Numeric, Point>
-{
-  typedef Point          point_t;
-  typedef Numeric 	 time_t;
-  typedef Numeric	 num_t;
+template <typename Numeric = double, Eigen::Index Dim = 1, typename Point = Eigen::Matrix<Numeric, Dim, 1> >
+struct Constant : public AbstractCurve<Numeric, Point> {
+  typedef Point point_t;
+  typedef Numeric time_t;
+  typedef Numeric num_t;
   typedef AbstractCurve<Numeric, Point> curve_abc_t;
 
-public:
+ public:
   ///\brief Constructor
 
-  Constant(const time_t& traj_time, const point_t& x_init_= Eigen::Matrix<Numeric, Dim, 1>::Zero())
-    : curve_abc_t(0,traj_time),
-      x_init(x_init_) {}
+  Constant(const time_t& traj_time, const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero())
+      : curve_abc_t(0, traj_time), x_init(x_init_) {}
 
   ///\brief Destructor
-  ~Constant(){}
-  
-public:
+  ~Constant() {}
 
-  virtual const point_t operator()(const time_t& t) const
-  {
-    return x_init;
-  }
+ public:
+  virtual const point_t operator()(const time_t& t) const { return x_init; }
 
-  virtual const point_t derivate(const time_t& t, const std::size_t& order) const
-  {
-    return point_t::Zero();
-  }
+  virtual const point_t derivate(const time_t& t, const std::size_t& order) const { return point_t::Zero(); }
 
-  virtual bool setInitialPoint(const point_t& x_init_)
-  {
-    if(x_init.size()!=x_init_.size())
-      return false;
+  virtual bool setInitialPoint(const point_t& x_init_) {
+    if (x_init.size() != x_init_.size()) return false;
     x_init = x_init_;
   }
 
-  virtual bool setInitialPoint(const double& x_init_)
-  {
-    if(Dim!=1)
-      return false;
+  virtual bool setInitialPoint(const double& x_init_) {
+    if (Dim != 1) return false;
     x_init[0] = x_init_;
     return true;
   }
 
-protected:
+ protected:
   /*Attributes*/
   point_t x_init;
 };
-}
-#endif //_CLASS_EXACTCUBIC
+}  // namespace parametriccurves
+#endif  //_CLASS_EXACTCUBIC
