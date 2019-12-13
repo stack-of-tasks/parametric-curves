@@ -55,31 +55,24 @@ struct TextFile : public AbstractCurve<Numeric, Point> {
  public:
   virtual bool loadTextFile(const std::string& fileName) {
     Eigen::MatrixXd data = parametriccurves::utils::readMatrixFromFile(fileName);
-    if(data.cols()==size)
-    {
-      std::cout<<"Setting derivatives to zero"<<std::endl;
+    if (data.cols() == size) {
+      std::cout << "Setting derivatives to zero" << std::endl;
       posValues = data;
       velValues.setZero(size);
       accValues.setZero(size);
-    }
-    else if (data.cols()==2*size)
-    {
+    } else if (data.cols() == 2 * size) {
       posValues = data.leftCols(size);
       velValues = data.rightCols(size);
       accValues = accValues.setZero(size);
-    }
-    else if (data.cols()==3*size)
-    {
+    } else if (data.cols() == 3 * size) {
       posValues = data.leftCols(size);
-      velValues = data.middleCols(size,size);
+      velValues = data.middleCols(size, size);
       accValues = data.rightCols(size);
-    }
-    else
-    {
-      std::cout<<"Unexpected number of columns (expected "<<3*size<<", found "<<data.cols()<<")\n";
+    } else {
+      std::cout << "Unexpected number of columns (expected " << 3 * size << ", found " << data.cols() << ")\n";
       return false;
     }
-    this->t_max = timeStep*(double)data.rows();
+    this->t_max = timeStep * (double)data.rows();
     this->t_min = 0.0;
     x_init = posValues.row(0);
     return true;
