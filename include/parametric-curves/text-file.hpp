@@ -70,7 +70,8 @@ struct TextFile : public AbstractCurve<Numeric, Point> {
       velValues = data.middleCols(size, size);
       accValues = data.rightCols(size);
     } else {
-      std::cout << "Unexpected number of columns (expected " << size << " or " << 2*size << " or " << 3 * size << ", found " << data.cols() << ")\n";
+      std::cout << "Unexpected number of columns (expected " << size << " or " << 2 * size << " or " << 3 * size
+                << ", found " << data.cols() << ")\n";
       return false;
     }
     this->t_max = timeStep * (double)data.rows();
