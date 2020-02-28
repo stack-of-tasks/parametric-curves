@@ -1,8 +1,11 @@
 import unittest
 
+import eigenpy
 from numpy import matrix
 
-from libparametric_curves_pywrap import (curve_constraints, forcecurve, polynomial, spline)
+from libparametric_curves_pywrap import curve_constraints, forcecurve, polynomial, spline
+
+eigenpy.switchToNumpyMatrix()
 
 
 class ParametricCurvesQuickTests(unittest.TestCase):
