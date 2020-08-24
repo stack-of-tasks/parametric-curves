@@ -15,6 +15,7 @@ else
 fi
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/opt/openrobots/lib/pkgconfig"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/openrobots/lib"
+export CMAKE_PREFIX_PATH="/opt/openrobots:$CMAKE_PREFIX_PATH}"
 
 # Setup environment variables.
 . ./.travis/run ../.travis/build
