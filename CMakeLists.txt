@@ -60,7 +60,6 @@ SET(${PROJECT_NAME}_HEADERS
   include/${PROJECT_NAME}/curve-constraint.hpp
   include/${PROJECT_NAME}/serialization/eigen-matrix.hpp
   #include/${PROJECT_NAME}/serialization/archive.hpp
-  #include/${PROJECT_NAME}/serialization/archive.hpp
   include/${PROJECT_NAME}/spatial/force-curve.hpp
   include/${PROJECT_NAME}/utils/file-io.hpp
   )
