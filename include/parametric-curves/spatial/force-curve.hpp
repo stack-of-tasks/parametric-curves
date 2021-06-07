@@ -118,7 +118,7 @@ struct ForceCurve : public AbstractCurve<Numeric, Eigen::Matrix<Numeric, 6, 1> >
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
  public:
-  bool loadFromFile(const std::string& filename) throw(std::invalid_argument) {
+  bool loadFromFile(const std::string& filename) {
     std::ifstream ifs(filename.c_str());
     if (ifs) {
       boost::archive::text_iarchive ia(ifs);
@@ -133,7 +133,7 @@ struct ForceCurve : public AbstractCurve<Numeric, Eigen::Matrix<Numeric, 6, 1> >
   }
 
   /// \brief Saved a Derived object as a text file.
-  bool saveToFile(const std::string& filename) const throw(std::invalid_argument) {
+  bool saveToFile(const std::string& filename) const {
     std::ofstream ofs(filename.c_str());
     if (ofs) {
       boost::archive::text_oarchive oa(ofs);
