@@ -9,6 +9,7 @@ eigenpy.switchToNumpyMatrix()
 
 
 class ParametricCurvesQuickTests(unittest.TestCase):
+
     def test_quick(self):
         cc = curve_constraints()
         cc.init_vel = matrix(range(3)).T
