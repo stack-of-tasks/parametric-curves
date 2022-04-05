@@ -1,9 +1,10 @@
-Spline
-===================
+# Spline
 
 [![Building Status](https://travis-ci.org/stack-of-tasks/parametric-curves.svg?branch=master)](https://travis-ci.org/stack-of-tasks/parametric-curves)
-[![Pipeline status](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/pipeline.svg)](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/commits/master)
-[![Coverage report](https://gepgitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/coverage.svg?job=doc-coverage)](http://projects.laas.fr/gepetto/doc/stack-of-tasks/parametric-curves/master/coverage/)
+[![Pipeline status](https://gitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/pipeline.svg)](https://gitlab.laas.fr/stack-of-tasks/parametric-curves/commits/master)
+[![Coverage report](https://gitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/coverage.svg?job=doc-coverage)](https://gepettoweb.laas.fr/doc/stack-of-tasks/parametric-curves/master/coverage/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/stack-of-tasks/parametric-curves/master.svg)](https://results.pre-commit.ci/latest/github/stack-of-tasks/parametric-curves)
 
 A template-based Library for creating curves of arbitrary order and dimension, eventually subject to derivative constraints. The main use of the library is the creation of end-effector trajectories for legged robots.
 
@@ -18,9 +19,8 @@ The library is template-based, thus generic:  the curves can be of any dimension
 While a Bezier curve implementation is provided, the main interest
 of this library is to create spline curves of arbitrary order
 
-----------
-Example of use for and end-effector trajectory
--------------
+## Example of use for and end-effector trajectory
+
 The library comes with an helper class to automatically generate end-effector trajectories.
 For instance, to create a 2 second long trajectory from the point (0,0,0) to (1,1,0), with a waypoint
 at (0.5,0.5,0.5), one can use the following code:
@@ -60,12 +60,12 @@ Additional parameters for the same methods an be used to specify parameters for 
 landing phases: height and duration of the phase, and along which normal.
 Please refer to the Main.cpp files to see all the unit tests and possibilities offered by the library
 
-Installation
--------------
-## Dependencies
+## Installation
+
+### Dependencies
 * [Eigen (version >= 3.2.2)](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 
-## Additional dependencies for python bindings
+### Additional dependencies for python bindings
 * [Boost.Python](http://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/index.html)
 * [eigenpy](https://github.com/stack-of-tasks/eigenpy)
 
@@ -87,7 +87,7 @@ If everything went fine you should obtain the following output:
 performing tests...
 no errors found
 ```
-### Optional: Python bindings installation
+#### Optional: Python bindings installation
 To install the Python bindings, in the CMakeLists.txt file, first enable the BUILD_PYTHON_INTERFACE option:
 ```
 OPTION (BUILD_PYTHON_INTERFACE "Build the python binding" ON)
