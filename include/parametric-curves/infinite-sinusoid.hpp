@@ -17,7 +17,8 @@ namespace parametriccurves {
 /// \brief Creates InfiniteSinusoid curve
 /// The sinusoid is actually a cosine so that it starts with zero velocity.
 /// Returns x = x_init + A*cos(2*pi*f*t) where f is give by 1/(2*traj_time)
-template <typename Numeric = double, Eigen::Index Dim = 1, typename Point = Eigen::Matrix<Numeric, Dim, 1> >
+template <typename Numeric = double, Eigen::Index Dim = 1,
+          typename Point = Eigen::Matrix<Numeric, Dim, 1> >
 struct InfiniteSinusoid : public AbstractCurve<Numeric, Point> {
   typedef Point point_t;
   typedef Numeric time_t;
@@ -28,9 +29,14 @@ struct InfiniteSinusoid : public AbstractCurve<Numeric, Point> {
  public:
   ///\brief Constructor
 
-  InfiniteSinusoid(const time_t& traj_time_, const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
-                   const point_t& x_final_ = Eigen::Matrix<Numeric, Dim, 1>::Zero())
-      : curve_abc_t(-1, -1), traj_time(traj_time_), x_init(x_init_), x_final(x_final_) {}
+  InfiniteSinusoid(
+      const time_t& traj_time_,
+      const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
+      const point_t& x_final_ = Eigen::Matrix<Numeric, Dim, 1>::Zero())
+      : curve_abc_t(-1, -1),
+        traj_time(traj_time_),
+        x_init(x_init_),
+        x_final(x_final_) {}
 
   ///\brief Destructor
   ~InfiniteSinusoid() {}
@@ -40,11 +46,13 @@ struct InfiniteSinusoid : public AbstractCurve<Numeric, Point> {
     return x_init + 0.5 * (x_final - x_init) * (1.0 - cos(two_pi_f(t)));
   }
 
-  virtual const point_t derivate(const time_t& t, const std::size_t& order) const {
+  virtual const point_t derivate(const time_t& t,
+                                 const std::size_t& order) const {
     if (order == 1)
       return (x_final - x_init) * 0.5 * two_pi_f(1) * sin(two_pi_f(t));
     else if (order == 2)
-      return (x_final - x_init) * 0.5 * two_pi_f(1) * two_pi_f(1) * cos(two_pi_f(t));
+      return (x_final - x_init) * 0.5 * two_pi_f(1) * two_pi_f(1) *
+             cos(two_pi_f(t));
     else {
       std::cerr << "Higher order derivatives not supported" << std::endl;
       return point_t::Zero(Dim);
@@ -87,7 +95,9 @@ struct InfiniteSinusoid : public AbstractCurve<Numeric, Point> {
   time_t traj_time;
 
  private:
-  inline const num_t two_pi_f(const time_t& t) const { return (M_PI / traj_time) * t; }
+  inline const num_t two_pi_f(const time_t& t) const {
+    return (M_PI / traj_time) * t;
+  }
 };
 }  // namespace parametriccurves
 #endif  //_CLASS_EXACTCUBIC

@@ -16,7 +16,8 @@ namespace parametriccurves {
 /** \class MinimumJerk
  *  \brief Creates MinimumJerk curve
  */
-template <typename Numeric = double, Eigen::Index Dim = 1, typename Point = Eigen::Matrix<Numeric, Dim, 1> >
+template <typename Numeric = double, Eigen::Index Dim = 1,
+          typename Point = Eigen::Matrix<Numeric, Dim, 1> >
 struct MinimumJerk : public AbstractCurve<Numeric, Point> {
   typedef Point point_t;
   typedef Numeric time_t;
@@ -26,7 +27,8 @@ struct MinimumJerk : public AbstractCurve<Numeric, Point> {
  public:
   ///\brief Constructor
 
-  MinimumJerk(const time_t& traj_time_, const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
+  MinimumJerk(const time_t& traj_time_,
+              const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
               const point_t& x_final_ = Eigen::Matrix<Numeric, Dim, 1>::Zero())
       : curve_abc_t(0, traj_time_), x_init(x_init_), x_final(x_final_) {}
 
@@ -44,7 +46,8 @@ struct MinimumJerk : public AbstractCurve<Numeric, Point> {
     return x_init + (x_final - x_init) * p;
   }
 
-  virtual const point_t derivate(const time_t& t, const std::size_t& order) const {
+  virtual const point_t derivate(const time_t& t,
+                                 const std::size_t& order) const {
     time_t td = t / this->t_max;
     time_t td2 = td * td;
     time_t td3 = td2 * td;
@@ -54,7 +57,8 @@ struct MinimumJerk : public AbstractCurve<Numeric, Point> {
       time_t dp = (30 * td2 - 60 * td3 + 30 * td4) / this->t_max;
       return (x_final - x_init) * dp;
     } else if (order == 2) {
-      time_t ddp = (60 * td - 180 * td2 + 120 * td3) / (this->t_max * this->t_max);
+      time_t ddp =
+          (60 * td - 180 * td2 + 120 * td3) / (this->t_max * this->t_max);
       return (x_final - x_init) * ddp;
     } else {
       std::cerr << "Higher order derivatives not supported" << std::endl;

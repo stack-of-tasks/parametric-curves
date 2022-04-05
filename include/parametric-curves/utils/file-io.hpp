@@ -1,8 +1,8 @@
 #ifndef _parameteric_curves_utils_file_io_hpp
 #define _parameteric_curves_utils_file_io_hpp
 
-#include <fstream>  /// to read text file
 #include <Eigen/Dense>
+#include <fstream>  /// to read text file
 
 #define MAXBUFSIZE ((int)1000000)
 
@@ -30,15 +30,18 @@ const Eigen::MatrixXd readMatrixFromFile(const std::string& filename) {
     if (cols == 0)
       cols = temp_cols;
     else if (temp_cols != cols && !infile.eof()) {
-      std::cout << "Error while reading matrix from file, line " << rows << " has " << temp_cols
-                << " columnds, while preceding lines had " << cols << " columnds\n";
+      std::cout << "Error while reading matrix from file, line " << rows
+                << " has " << temp_cols
+                << " columnds, while preceding lines had " << cols
+                << " columnds\n";
       std::cout << line << "\n";
       break;
     }
 
     rows++;
     if ((rows + 1) * cols >= MAXBUFSIZE) {
-      std::cout << "Max buffer size exceeded (" << rows << " rows, " << cols << " cols)\n";
+      std::cout << "Max buffer size exceeded (" << rows << " rows, " << cols
+                << " cols)\n";
       break;
     }
   }

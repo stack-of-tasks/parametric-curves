@@ -13,13 +13,13 @@
 #ifndef _parameteric_curves_polynomial_hpp
 #define _parameteric_curves_polynomial_hpp
 
+#include <Eigen/Dense>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <parametric-curves/abstract-curve.hpp>
 #include <parametric-curves/serialization/eigen-matrix.hpp>
-#include <Eigen/Dense>
-#include <vector>
 #include <stdexcept>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include <vector>
 
 namespace parametriccurves {
 /// \class Polynomial
@@ -27,7 +27,8 @@ namespace parametriccurves {
 /// [tBegin, tEnd]. It follows the equation
 /// x(t) = a + b(t - t_min_) + ... + d(t - t_min_)^N, where N is the order
 ///
-template <typename Numeric = double, Eigen::Index Dim = 3, typename Point = Eigen::Matrix<Numeric, Dim, 1> >
+template <typename Numeric = double, Eigen::Index Dim = 3,
+          typename Point = Eigen::Matrix<Numeric, Dim, 1> >
 struct Polynomial : public parametriccurves::AbstractCurve<Numeric, Point> {
   typedef Point point_t;
   typedef Numeric time_t;
@@ -39,23 +40,29 @@ struct Polynomial : public parametriccurves::AbstractCurve<Numeric, Point> {
 
  public:
   ///\brief Constructor
-  ///\param coefficients : a reference to an Eigen matrix where each column is a coefficient,
-  /// from the zero order coefficient, up to the highest order. Spline order is given
-  /// by the number of the columns -1.
+  ///\param coefficients : a reference to an Eigen matrix where each column is a
+  /// coefficient,
+  /// from the zero order coefficient, up to the highest order. Spline order is
+  /// given by the number of the columns -1.
   ///\param min: LOWER bound on interval definition of the spline
   ///\param max: UPPER bound on interval definition of the spline
   Polynomial(const coeff_t& coefficients, const time_t tmin, const time_t tmax)
-      : curve_abc_t(tmin, tmax), coefficients_(coefficients), dim_(Dim), order_(coefficients_.cols() - 1) {
+      : curve_abc_t(tmin, tmax),
+        coefficients_(coefficients),
+        dim_(Dim),
+        order_(coefficients_.cols() - 1) {
     safe_check();
   }
 
   ///\brief Constructor
-  ///\param coefficients : a container containing all coefficients of the spline, starting
-  /// with the zero order coefficient, up to the highest order. Spline order is given
-  /// by the size of the coefficients
+  ///\param coefficients : a container containing all coefficients of the
+  /// spline, starting
+  /// with the zero order coefficient, up to the highest order. Spline order is
+  /// given by the size of the coefficients
   ///\param min: LOWER bound on interval definition of the spline
   ///\param max: UPPER bound on interval definition of the spline
-  Polynomial(const t_point_t& coefficients, const time_t tmin, const time_t tmax)
+  Polynomial(const t_point_t& coefficients, const time_t tmin,
+             const time_t tmax)
       : curve_abc_t(tmin, tmax),
         coefficients_(init_coeffs(coefficients.begin(), coefficients.end())),
         dim_(Dim),
@@ -66,13 +73,15 @@ struct Polynomial : public parametriccurves::AbstractCurve<Numeric, Point> {
   Polynomial() {}
 
   ///\brief Constructor
-  ///\param zeroOrderCoefficient : an iterator pointing to the first element of a structure containing the coefficients
+  ///\param zeroOrderCoefficient : an iterator pointing to the first element of
+  /// a structure containing the coefficients
   /// it corresponds to the zero degree coefficient
-  ///\param out   : an iterator pointing to the last element of a structure ofcoefficients
-  ///\param min: LOWER bound on interval definition of the spline
-  ///\param max: UPPER bound on interval definition of the spline
+  ///\param out   : an iterator pointing to the last element of a structure
+  /// ofcoefficients \param min: LOWER bound on interval definition of the
+  /// spline \param max: UPPER bound on interval definition of the spline
   template <typename In>
-  Polynomial(In zeroOrderCoefficient, In out, const time_t tmin, const time_t tmax)
+  Polynomial(In zeroOrderCoefficient, In out, const time_t tmin,
+             const time_t tmax)
       : curve_abc_t(tmin, tmax),
         coefficients_(init_coeffs(zeroOrderCoefficient, out)),
         dim_(Dim),
@@ -109,9 +118,8 @@ struct Polynomial : public parametriccurves::AbstractCurve<Numeric, Point> {
     ///  \param return : the value x(t)
     virtual point_t operator()(const time_t t) const
     {
-        if((t < t_min_ || t > t_max_) && Safe){ throw std::out_of_range("TODO");}
-        time_t const dt (t-t_min_);
-        time_t cdt(1);
+        if((t < t_min_ || t > t_max_) && Safe){ throw
+    std::out_of_range("TODO");} time_t const dt (t-t_min_); time_t cdt(1);
         point_t currentPoint_ = point_t::Zero();
         for(int i = 0; i < order_+1; ++i, cdt*=dt)
             currentPoint_ += cdt *coefficients_.col(i);
@@ -146,7 +154,8 @@ struct Polynomial : public parametriccurves::AbstractCurve<Numeric, Point> {
   ///  \param t : the time when to evaluate the spline
   ///  \param order : order of the derivative
   ///  \param return : the value x(t)
-  virtual const point_t derivate(const time_t& t, const std::size_t& order) const {
+  virtual const point_t derivate(const time_t& t,
+                                 const std::size_t& order) const {
     if ((t < this->t_min || t > this->t_max)) {
       throw std::out_of_range("TODO");
     }
@@ -200,10 +209,13 @@ struct Polynomial : public parametriccurves::AbstractCurve<Numeric, Point> {
   /*Attributes*/
   template <typename In>
   coeff_t init_coeffs(In zeroOrderCoefficient, In highestOrderCoefficient) {
-    std::size_t size = std::distance(zeroOrderCoefficient, highestOrderCoefficient);
+    std::size_t size =
+        std::distance(zeroOrderCoefficient, highestOrderCoefficient);
     coeff_t res = coeff_t(Dim, size);
     int i = 0;
-    for (In cit = zeroOrderCoefficient; cit != highestOrderCoefficient; ++cit, ++i) res.col(i) = *cit;
+    for (In cit = zeroOrderCoefficient; cit != highestOrderCoefficient;
+         ++cit, ++i)
+      res.col(i) = *cit;
     return res;
   }
 };  // class Polynomial

@@ -20,7 +20,8 @@ namespace parametriccurves {
  *  In particular the frequency starts from a value f0 and it increases linearly
  *  up to a value f1. Then it goes back to f0 and the trajectory is ended.
  */
-template <typename Numeric = double, Eigen::Index Dim = 1, typename Point = Eigen::Matrix<Numeric, Dim, 1> >
+template <typename Numeric = double, Eigen::Index Dim = 1,
+          typename Point = Eigen::Matrix<Numeric, Dim, 1> >
 struct LinearChirp : public AbstractCurve<Numeric, Point> {
   typedef Point point_t;
   typedef Point freq_t;
@@ -32,7 +33,8 @@ struct LinearChirp : public AbstractCurve<Numeric, Point> {
  public:
   ///\brief Constructor
 
-  LinearChirp(const time_t& traj_time_, const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
+  LinearChirp(const time_t& traj_time_,
+              const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
               const point_t& x_final_ = Eigen::Matrix<Numeric, Dim, 1>::Zero())
       : curve_abc_t(0, traj_time_), x_init(x_init_), x_final(x_final_) {
     f0.setZero(Dim);
@@ -42,7 +44,11 @@ struct LinearChirp : public AbstractCurve<Numeric, Point> {
   LinearChirp(const time_t& traj_time_, const freq_t& f0_, const freq_t& f1_,
               const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
               const point_t& x_final_ = Eigen::Matrix<Numeric, Dim, 1>::Zero())
-      : curve_abc_t(0, traj_time_), f0(f0_), f1(f1_), x_init(x_init_), x_final(x_final_) {}
+      : curve_abc_t(0, traj_time_),
+        f0(f0_),
+        f1(f1_),
+        x_init(x_init_),
+        x_final(x_final_) {}
 
   ///\brief Destructor
   ~LinearChirp() {}
@@ -53,12 +59,14 @@ struct LinearChirp : public AbstractCurve<Numeric, Point> {
     return x_init.array() + (x_final.array() - x_init.array()) * m_p.array();
   }
 
-  virtual const point_t derivate(const time_t& t, const std::size_t& order) const {
+  virtual const point_t derivate(const time_t& t,
+                                 const std::size_t& order) const {
     if (order == 1) {
       const point_t& m_dp = M_PI * freq(t).array() * phase(t).array().sin();
       return (x_final - x_init).array() * m_dp.array();
     } else if (order == 2) {
-      const point_t& m_ddp = 2.0 * M_PI * M_PI * freq(t).array() * freq(t).array() * phase(t).array().cos();
+      const point_t& m_ddp = 2.0 * M_PI * M_PI * freq(t).array() *
+                             freq(t).array() * phase(t).array().cos();
       return (x_final - x_init).array() * m_ddp.array();
     } else {
       std::cerr << "Higher order derivatives not supported" << std::endl;
