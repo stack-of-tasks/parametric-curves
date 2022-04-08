@@ -29,7 +29,8 @@ struct TextFile : public AbstractCurve<Numeric, Point> {
  public:
   ///\brief Constructor
 
-  TextFile(const time_t& dt_, const std::size_t& size_) : curve_abc_t(-1, -1), timeStep(dt_), size(size_) {}
+  TextFile(const time_t& dt_, const std::size_t& size_)
+      : curve_abc_t(-1, -1), timeStep(dt_), size(size_) {}
 
   ///\brief Destructor
   ~TextFile() {}
@@ -40,7 +41,8 @@ struct TextFile : public AbstractCurve<Numeric, Point> {
     return posValues.row(i);
   }
 
-  virtual const point_t derivate(const time_t& t, const std::size_t& order) const {
+  virtual const point_t derivate(const time_t& t,
+                                 const std::size_t& order) const {
     Eigen::VectorXd::Index i = (Eigen::VectorXd::Index)std::floor(t / timeStep);
     if (order == 1)
       return velValues.row(i);
@@ -54,14 +56,16 @@ struct TextFile : public AbstractCurve<Numeric, Point> {
 
  public:
   virtual bool loadTextFile(const std::string& fileName) {
-    Eigen::MatrixXd data = parametriccurves::utils::readMatrixFromFile(fileName);
+    Eigen::MatrixXd data =
+        parametriccurves::utils::readMatrixFromFile(fileName);
     if (data.cols() == size) {
       std::cout << fileName << ": setting derivatives to zero" << std::endl;
       posValues = data;
       velValues.setZero(data.rows(), size);
       accValues.setZero(data.rows(), size);
     } else if (data.cols() == 2 * size) {
-      std::cout << fileName << ": setting second derivative to zero" << std::endl;
+      std::cout << fileName << ": setting second derivative to zero"
+                << std::endl;
       posValues = data.leftCols(size);
       velValues = data.rightCols(size);
       accValues = accValues.setZero(data.rows(), size);
@@ -70,8 +74,9 @@ struct TextFile : public AbstractCurve<Numeric, Point> {
       velValues = data.middleCols(size, size);
       accValues = data.rightCols(size);
     } else {
-      std::cout << "Unexpected number of columns (expected " << size << " or " << 2 * size << " or " << 3 * size
-                << ", found " << data.cols() << ")\n";
+      std::cout << "Unexpected number of columns (expected " << size << " or "
+                << 2 * size << " or " << 3 * size << ", found " << data.cols()
+                << ")\n";
       return false;
     }
     this->t_max = timeStep * (double)data.rows();

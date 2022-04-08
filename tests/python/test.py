@@ -3,19 +3,27 @@ import unittest
 from numpy import matrix
 from numpy.linalg import norm
 
-from spline import (bezier, bezier6, curve_constraints, exact_cubic, polynom, spline_deriv_constraint)
+from spline import (
+    bezier,
+    bezier6,
+    curve_constraints,
+    exact_cubic,
+    polynom,
+    spline_deriv_constraint,
+)
 
 
 class ParametricCurvesTests(unittest.TestCase):
-
     def test_all(self):
-        waypoints = matrix([[1., 2., 3.], [4., 5., 6.]]).transpose()
-        waypoints6 = matrix([[1., 2., 3., 7., 5., 5.], [4., 5., 6., 4., 5., 6.]]).transpose()
-        time_waypoints = matrix([0., 1.])
+        waypoints = matrix([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]).transpose()
+        waypoints6 = matrix(
+            [[1.0, 2.0, 3.0, 7.0, 5.0, 5.0], [4.0, 5.0, 6.0, 4.0, 5.0, 6.0]]
+        ).transpose()
+        time_waypoints = matrix([0.0, 1.0])
 
         # testing bezier curve
         a = bezier6(waypoints6)
-        a = bezier(waypoints, -1., 3.)
+        a = bezier(waypoints, -1.0, 3.0)
 
         self.assertEqual(a.degree, a.nbWaypoints - 1)
         a.min()
@@ -28,22 +36,22 @@ class ParametricCurvesTests(unittest.TestCase):
         prim = a.compute_primitive(1)
 
         for i in range(10):
-            t = float(i) / 10.
+            t = float(i) / 10.0
             self.assertTrue((a(t) == prim.derivate(t, 1)).all())
-        self.assertTrue((prim(0) == matrix([0., 0., 0.])).all())
+        self.assertTrue((prim(0) == matrix([0.0, 0.0, 0.0])).all())
 
         prim = a.compute_primitive(2)
         for i in range(10):
-            t = float(i) / 10.
+            t = float(i) / 10.0
             self.assertTrue((a(t) == prim.derivate(t, 2)).all())
-        self.assertTrue((prim(0) == matrix([0., 0., 0.])).all())
+        self.assertTrue((prim(0) == matrix([0.0, 0.0, 0.0])).all())
 
         # testing bezier with constraints
         c = curve_constraints()
-        c.init_vel = matrix([0., 1., 1.])
-        c.end_vel = matrix([0., 1., 1.])
-        c.init_acc = matrix([0., 1., -1.])
-        c.end_acc = matrix([0., 100., 1.])
+        c.init_vel = matrix([0.0, 1.0, 1.0])
+        c.end_vel = matrix([0.0, 1.0, 1.0])
+        c.init_acc = matrix([0.0, 1.0, -1.0])
+        c.end_acc = matrix([0.0, 100.0, 1.0])
 
         a = bezier(waypoints, c)
         self.assertLess(norm(a.derivate(0, 1) - c.init_vel), 1e-10)
@@ -51,7 +59,7 @@ class ParametricCurvesTests(unittest.TestCase):
 
         # testing polynom function
         a = polynom(waypoints)
-        a = polynom(waypoints, -1., 3.)
+        a = polynom(waypoints, -1.0, 3.0)
         a.min()
         a.max()
         a(0.4)
@@ -73,14 +81,14 @@ class ParametricCurvesTests(unittest.TestCase):
         c.init_acc
         c.end_acc
 
-        c.init_vel = matrix([0., 1., 1.])
-        c.end_vel = matrix([0., 1., 1.])
-        c.init_acc = matrix([0., 1., 1.])
-        c.end_acc = matrix([0., 1., 1.])
+        c.init_vel = matrix([0.0, 1.0, 1.0])
+        c.end_vel = matrix([0.0, 1.0, 1.0])
+        c.init_acc = matrix([0.0, 1.0, 1.0])
+        c.end_acc = matrix([0.0, 1.0, 1.0])
 
         a = spline_deriv_constraint(waypoints, time_waypoints)
         a = spline_deriv_constraint(waypoints, time_waypoints, c)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

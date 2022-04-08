@@ -33,17 +33,22 @@ namespace boost {
 
 namespace serialization {
 
-template <class Archive, typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
-void save(Archive& ar, const Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& m,
-          const unsigned int /*version*/) {
+template <class Archive, typename _Scalar, int _Rows, int _Cols, int _Options,
+          int _MaxRows, int _MaxCols>
+void save(
+    Archive& ar,
+    const Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& m,
+    const unsigned int /*version*/) {
   Eigen::DenseIndex rows(m.rows()), cols(m.cols());
   ar& BOOST_SERIALIZATION_NVP(rows);
   ar& BOOST_SERIALIZATION_NVP(cols);
   ar& make_nvp("data", make_array(m.data(), (size_t)m.size()));
 }
 
-template <class Archive, typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
-void load(Archive& ar, Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& m,
+template <class Archive, typename _Scalar, int _Rows, int _Cols, int _Options,
+          int _MaxRows, int _MaxCols>
+void load(Archive& ar,
+          Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& m,
           const unsigned int /*version*/) {
   Eigen::DenseIndex rows, cols;
   ar >> BOOST_SERIALIZATION_NVP(rows);
@@ -52,9 +57,12 @@ void load(Archive& ar, Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, 
   ar >> make_nvp("data", make_array(m.data(), (size_t)m.size()));
 }
 
-template <class Archive, typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
-void serialize(Archive& ar, Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& m,
-               const unsigned int version) {
+template <class Archive, typename _Scalar, int _Rows, int _Cols, int _Options,
+          int _MaxRows, int _MaxCols>
+void serialize(
+    Archive& ar,
+    Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& m,
+    const unsigned int version) {
   split_free(ar, m, version);
 }
 

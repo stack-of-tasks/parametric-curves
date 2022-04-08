@@ -9,13 +9,13 @@
 #ifndef _CLASS_BERNSTEIN
 #define _CLASS_BERNSTEIN
 
-#include "curve_abc.h"
+#include <math.h>
+
+#include <stdexcept>
+#include <vector>
 
 #include "MathDefs.h"
-
-#include <math.h>
-#include <vector>
-#include <stdexcept>
+#include "curve_abc.h"
 
 namespace spline {
 ///
@@ -31,14 +31,17 @@ unsigned int fact(const unsigned int n) {
 ///
 /// \brief Computes a binomal coefficient
 ///
-unsigned int bin(const unsigned int n, const unsigned int k) { return fact(n) / (fact(k) * fact(n - k)); }
+unsigned int bin(const unsigned int n, const unsigned int k) {
+  return fact(n) / (fact(k) * fact(n - k));
+}
 
 /// \class Bernstein
 /// \brief Computes a Bernstein polynome
 ///
 template <typename Numeric = double>
 struct Bern {
-  Bern(const unsigned int m, const unsigned int i) : m_minus_i(m - i), i_(i), bin_m_i_(bin(m, i)) {}
+  Bern(const unsigned int m, const unsigned int i)
+      : m_minus_i(m - i), i_(i), bin_m_i_(bin(m, i)) {}
 
   ~Bern() {}
 

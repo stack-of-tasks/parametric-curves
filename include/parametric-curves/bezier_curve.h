@@ -9,16 +9,14 @@
 #ifndef _CLASS_BEZIERCURVE
 #define _CLASS_BEZIERCURVE
 
-#include "curve_abc.h"
-#include "bernstein.h"
-#include "curve_constraint.h"
+#include <iostream>
+#include <stdexcept>
+#include <vector>
 
 #include "MathDefs.h"
-
-#include <vector>
-#include <stdexcept>
-
-#include <iostream>
+#include "bernstein.h"
+#include "curve_abc.h"
+#include "curve_constraint.h"
 
 namespace spline {
 /// \class BezierCurve
@@ -26,8 +24,8 @@ namespace spline {
 /// For degree lesser than 4, the evaluation is analitycal.Otherwise
 /// the bernstein polynoms are used to evaluate the spline at a given location.
 ///
-template <typename Time = double, typename Numeric = Time, Eigen::Index Dim = 3, bool Safe = false,
-          typename Point = Eigen::Matrix<Numeric, Dim, 1> >
+template <typename Time = double, typename Numeric = Time, Eigen::Index Dim = 3,
+          bool Safe = false, typename Point = Eigen::Matrix<Numeric, Dim, 1> >
 struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
   typedef Point point_t;
   typedef Time time_t;
@@ -43,7 +41,8 @@ struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
   ///\param PointsBegin, PointsEnd : the points parametering the Bezier curve
   ///
   template <typename In>
-  bezier_curve(In PointsBegin, In PointsEnd, const time_t minBound = 0, const time_t maxBound = 1)
+  bezier_curve(In PointsBegin, In PointsEnd, const time_t minBound = 0,
+               const time_t maxBound = 1)
       : minBound_(minBound),
         maxBound_(maxBound),
         size_(std::distance(PointsBegin, PointsEnd)),
@@ -52,28 +51,35 @@ struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
     assert(bernstein_.size() == size_);
     In it(PointsBegin);
     if (Safe && (size_ < 1 || minBound >= maxBound))
-      throw std::out_of_range("can't create bezier min bound is higher than max bound");  // TODO
+      throw std::out_of_range(
+          "can't create bezier min bound is higher than max bound");  // TODO
     for (; it != PointsEnd; ++it) pts_.push_back(*it);
   }
 
   ///\brief Constructor
-  /// This constructor will add 4 points (2 after the first one, 2 before the last one)
-  /// to ensure that velocity and acceleration constraints are respected
+  /// This constructor will add 4 points (2 after the first one, 2 before the
+  /// last one) to ensure that velocity and acceleration constraints are
+  /// respected
   ///\param PointsBegin, PointsEnd : the points parametering the Bezier curve
-  ///\param constraints : constraints applying on start / end velocities and acceleration
+  ///\param constraints : constraints applying on start / end velocities and
+  /// acceleration
   ///
   template <typename In>
-  bezier_curve(In PointsBegin, In PointsEnd, const curve_constraints_t& constraints, const time_t minBound = 0,
-               const time_t maxBound = 1)
+  bezier_curve(In PointsBegin, In PointsEnd,
+               const curve_constraints_t& constraints,
+               const time_t minBound = 0, const time_t maxBound = 1)
       : minBound_(minBound),
         maxBound_(maxBound),
         size_(std::distance(PointsBegin, PointsEnd) + 4),
         degree_(size_ - 1),
         bernstein_(spline::makeBernstein<num_t>(degree_)) {
     if (Safe && (size_ < 1 || minBound >= maxBound))
-      throw std::out_of_range("can't create bezier min bound is higher than max bound");
-    t_point_t updatedList = add_constraints<In>(PointsBegin, PointsEnd, constraints);
-    for (cit_point_t cit = updatedList.begin(); cit != updatedList.end(); ++cit) pts_.push_back(*cit);
+      throw std::out_of_range(
+          "can't create bezier min bound is higher than max bound");
+    t_point_t updatedList =
+        add_constraints<In>(PointsBegin, PointsEnd, constraints);
+    for (cit_point_t cit = updatedList.begin(); cit != updatedList.end(); ++cit)
+      pts_.push_back(*cit);
   }
 
   ///\brief Destructor
@@ -94,7 +100,8 @@ struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
   virtual point_t operator()(const time_t t) const {
     num_t nT = (t - minBound_) / (maxBound_ - minBound_);
     if (Safe & !(0 <= nT && nT <= 1)) {
-      throw std::out_of_range("can't evaluate bezier curve, out of range");  // TODO
+      throw std::out_of_range(
+          "can't evaluate bezier curve, out of range");  // TODO
     } else {
       num_t dt = (1 - nT);
       switch (size_) {
@@ -107,8 +114,8 @@ struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
           return pts_[0] * dt * dt + 2 * pts_[1] * nT * dt + pts_[2] * nT * nT;
           break;
         case 4:
-          return pts_[0] * dt * dt * dt + 3 * pts_[1] * nT * dt * dt + 3 * pts_[2] * nT * nT * dt +
-                 pts_[3] * nT * nT * nT;
+          return pts_[0] * dt * dt * dt + 3 * pts_[1] * nT * dt * dt +
+                 3 * pts_[2] * nT * nT * dt + pts_[3] * nT * nT * nT;
         default:
           return evalHorner(nT);
           break;
@@ -122,10 +129,12 @@ struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
   bezier_curve_t compute_derivate(const std::size_t order) const {
     if (order == 0) return *this;
     t_point_t derived_wp;
-    for (typename t_point_t::const_iterator pit = pts_.begin(); pit != pts_.end() - 1; ++pit)
+    for (typename t_point_t::const_iterator pit = pts_.begin();
+         pit != pts_.end() - 1; ++pit)
       derived_wp.push_back(degree_ * (*(pit + 1) - (*pit)));
     if (derived_wp.empty()) derived_wp.push_back(point_t::Zero());
-    bezier_curve_t deriv(derived_wp.begin(), derived_wp.end(), minBound_, maxBound_);
+    bezier_curve_t deriv(derived_wp.begin(), derived_wp.end(), minBound_,
+                         maxBound_);
     return deriv.compute_derivate(order - 1);
   }
 
@@ -137,10 +146,11 @@ struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
     num_t new_degree = (num_t)(degree_ + 1);
     t_point_t n_wp;
     point_t current_sum = point_t::Zero();
-    // recomputing waypoints q_i from derivative waypoints p_i. q_0 is the given constant.
-    // then q_i = (sum( j = 0 -> j = i-1) p_j) /n+1
+    // recomputing waypoints q_i from derivative waypoints p_i. q_0 is the given
+    // constant. then q_i = (sum( j = 0 -> j = i-1) p_j) /n+1
     n_wp.push_back(current_sum);
-    for (typename t_point_t::const_iterator pit = pts_.begin(); pit != pts_.end(); ++pit) {
+    for (typename t_point_t::const_iterator pit = pts_.begin();
+         pit != pts_.end(); ++pit) {
       current_sum += *pit;
       n_wp.push_back(current_sum / new_degree);
     }
@@ -165,14 +175,16 @@ struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
   point_t evalBernstein(const Numeric u) const {
     point_t res = point_t::Zero();
     typename t_point_t::const_iterator pts_it = pts_.begin();
-    for (typename std::vector<Bern<Numeric> >::const_iterator cit = bernstein_.begin(); cit != bernstein_.end();
-         ++cit, ++pts_it)
+    for (typename std::vector<Bern<Numeric> >::const_iterator cit =
+             bernstein_.begin();
+         cit != bernstein_.end(); ++cit, ++pts_it)
       res += cit->operator()(u) * (*pts_it);
     return res;
   }
 
   ///
-  /// \brief Evaluates all Bernstein polynomes for a certain degree using horner's scheme
+  /// \brief Evaluates all Bernstein polynomes for a certain degree using
+  /// horner's scheme
   ///
   point_t evalHorner(const Numeric t) const {
     typename t_point_t::const_iterator pts_it = pts_.begin();
@@ -194,7 +206,8 @@ struct bezier_curve : public curve_abc<Time, Numeric, Dim, Safe, Point> {
 
  private:
   template <typename In>
-  t_point_t add_constraints(In PointsBegin, In PointsEnd, const curve_constraints_t& constraints) {
+  t_point_t add_constraints(In PointsBegin, In PointsEnd,
+                            const curve_constraints_t& constraints) {
     t_point_t res;
     point_t P0, P1, P2, P_n_2, P_n_1, PN;
     P0 = *PointsBegin;

@@ -11,15 +11,14 @@
 #ifndef _parameteric_curves_force_curve_hpp
 #define _parameteric_curves_force_curve_hpp
 
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/split_member.hpp>
+#include <boost/serialization/vector.hpp>
+#include <fstream>
 #include <parametric-curves/abstract-curve.hpp>
 #include <parametric-curves/spline.hpp>
-
-#include <fstream>
 #include <vector>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/split_member.hpp>
 namespace parametriccurves {
 namespace spatial {
 
@@ -29,7 +28,8 @@ using parametriccurves::Spline;
 /// Returns Plucker coordinates in the form of (Linear(3), Angular(3))
 ///
 template <typename Numeric = double>
-struct ForceCurve : public AbstractCurve<Numeric, Eigen::Matrix<Numeric, 6, 1> > {
+struct ForceCurve
+    : public AbstractCurve<Numeric, Eigen::Matrix<Numeric, 6, 1> > {
   static const std::size_t Dim = 3;
   typedef Eigen::Matrix<Numeric, 2 * Dim, 1> force_t;
   typedef Eigen::Matrix<Numeric, 2 * Dim, 1> motion_t;
@@ -125,7 +125,8 @@ struct ForceCurve : public AbstractCurve<Numeric, Eigen::Matrix<Numeric, 6, 1> >
       ForceCurve& force_curve = *static_cast<ForceCurve*>(this);
       ia >> force_curve;
     } else {
-      const std::string exception_message(filename + " does not seem to be a valid file.");
+      const std::string exception_message(filename +
+                                          " does not seem to be a valid file.");
       throw std::invalid_argument(exception_message);
       return false;
     }
@@ -139,7 +140,8 @@ struct ForceCurve : public AbstractCurve<Numeric, Eigen::Matrix<Numeric, 6, 1> >
       boost::archive::text_oarchive oa(ofs);
       oa << *static_cast<const ForceCurve*>(this);
     } else {
-      const std::string exception_message(filename + " does not seem to be a valid file.");
+      const std::string exception_message(filename +
+                                          " does not seem to be a valid file.");
       throw std::invalid_argument(exception_message);
       return false;
     }

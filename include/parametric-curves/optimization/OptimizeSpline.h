@@ -12,19 +12,18 @@
 #ifndef _CLASS_SPLINEOPTIMIZER
 #define _CLASS_SPLINEOPTIMIZER
 
-#include "spline/MathDefs.h"
-#include "spline/exact_cubic.h"
+#include <Eigen/SparseCore>
+#include <utility>
 
 #include "mosek/mosek.h"
-#include <Eigen/SparseCore>
-
-#include <utility>
+#include "spline/MathDefs.h"
+#include "spline/exact_cubic.h"
 
 namespace spline {
 /// \class SplineOptimizer
 /// \brief Mosek connection to produce optimized splines
-template <typename Time = double, typename Numeric = Time, Eigen::Index Dim = 3, bool Safe = false,
-          typename Point = Eigen::Matrix<Numeric, Dim, 1> >
+template <typename Time = double, typename Numeric = Time, Eigen::Index Dim = 3,
+          bool Safe = false, typename Point = Eigen::Matrix<Numeric, Dim, 1> >
 struct SplineOptimizer {
   typedef Eigen::Matrix<Numeric, Eigen::Dynamic, Eigen::Dynamic> MatrixX;
   typedef Point point_t;
@@ -52,15 +51,18 @@ struct SplineOptimizer {
   /*Operations*/
  public:
   /// \brief Starts an optimization loop to create curve
-  ///	\param waypoints : a list comprising at least 2 waypoints in ascending time order
+  ///	\param waypoints : a list comprising at least 2 waypoints in ascending
+  /// time order
   /// \return An Optimised curve
   template <typename In>
-  exact_cubic_t* GenerateOptimizedCurve(In wayPointsBegin, In wayPointsEnd) const;
+  exact_cubic_t* GenerateOptimizedCurve(In wayPointsBegin,
+                                        In wayPointsEnd) const;
   /*Operations*/
 
  private:
   template <typename In>
-  void ComputeHMatrices(In wayPointsBegin, In wayPointsEnd, MatrixX& h1, MatrixX& h2, MatrixX& h3, MatrixX& h4) const;
+  void ComputeHMatrices(In wayPointsBegin, In wayPointsEnd, MatrixX& h1,
+                        MatrixX& h2, MatrixX& h3, MatrixX& h4) const;
 
   /*Attributes*/
  private:
@@ -72,11 +74,12 @@ struct SplineOptimizer {
   typedef std::vector<waypoint_t> T_waypoints_t;
 };
 
-template <typename Time, typename Numeric, Eigen::Index Dim, bool Safe, typename Point>
+template <typename Time, typename Numeric, Eigen::Index Dim, bool Safe,
+          typename Point>
 template <typename In>
-inline void SplineOptimizer<Time, Numeric, Dim, Safe, Point>::ComputeHMatrices(In wayPointsBegin, In wayPointsEnd,
-                                                                               MatrixX& h1, MatrixX& h2, MatrixX& h3,
-                                                                               MatrixX& h4) const {
+inline void SplineOptimizer<Time, Numeric, Dim, Safe, Point>::ComputeHMatrices(
+    In wayPointsBegin, In wayPointsEnd, MatrixX& h1, MatrixX& h2, MatrixX& h3,
+    MatrixX& h4) const {
   std::size_t const size(std::distance(wayPointsBegin, wayPointsEnd));
   assert((!Safe) || (size > 1));
 
@@ -108,10 +111,12 @@ inline void SplineOptimizer<Time, Numeric, Dim, Safe, Point>::ComputeHMatrices(I
   }
 }
 
-template <typename Time, typename Numeric, std::size_t Dim, bool Safe, typename Point>
+template <typename Time, typename Numeric, std::size_t Dim, bool Safe,
+          typename Point>
 template <typename In>
 inline exact_cubic<Time, Numeric, Dim, Safe, Point>*
-SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(In wayPointsBegin, In wayPointsEnd) const {
+SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(
+    In wayPointsBegin, In wayPointsEnd) const {
   exact_cubic_t* res = 0;
   int const size((int)std::distance(wayPointsBegin, wayPointsEnd));
   if (Safe && size < 1) {
@@ -131,15 +136,16 @@ SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(In wayP
 
   ComputeHMatrices(wayPointsBegin, wayPointsEnd, h1, h2, h3, h4);
 
-  // number of Waypoints : T + 1 => T mid points. Dim variables per points, + acceleration + derivations
-  // (T * t+ 1 ) * Dim * 3 = nb var
+  // number of Waypoints : T + 1 => T mid points. Dim variables per points, +
+  // acceleration + derivations (T * t+ 1 ) * Dim * 3 = nb var
 
   // NOG const MSKint32t numvar = ( size + size - 1) * 3 * 3;
   const MSKint32t numvar = (size)*Dim * 3;
   /*
-  We store the variables in that order to simplifly matrix computation ( see later )
-// NOG [ x0  x1 --- xn y0 --- y z0 --- zn x0. --- zn. x0..--- zn.. x0' --- zn..' ] T
-     [ x0  x1 --- xn y0 --- y z0 --- zn x0. --- zn. x0..--- zn..] T
+  We store the variables in that order to simplifly matrix computation ( see
+later )
+// NOG [ x0  x1 --- xn y0 --- y z0 --- zn x0. --- zn. x0..--- zn.. x0' --- zn..'
+] T [ x0  x1 --- xn y0 --- y z0 --- zn x0. --- zn. x0..--- zn..] T
   */
 
   /*the first constraint is H1x. = H2x => H2x - H1x. = 0
@@ -150,9 +156,11 @@ SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(In wayP
 
   int ptOff = (int)Dim * size;        // . offest
   int ptptOff = (int)Dim * 2 * size;  // .. offest
-  int prOff = (int)3 * ptOff;         // ' offest
-                                      // NOG int prptOff   = (int) prOff + ptOff; // '. offest
-                                      // NOG int prptptOff = (int) prptOff + ptOff; // '.. offest
+  int prOff =
+      (int)3 *
+      ptOff;  // ' offest
+              // NOG int prptOff   = (int) prOff + ptOff; // '. offest
+              // NOG int prptptOff = (int) prptOff + ptOff; // '.. offest
 
   MatrixX h2x_h1x = MatrixX::Zero(size * Dim, numvar);
   /**A looks something like that : (n = size)
@@ -195,7 +203,8 @@ SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(In wayP
                   int id = i + j;
                   g1x_g2x.block(id, j*size	    , 1, size)   = g1.row(i);
                   g1x_g2x.block(id, j*size + ptOff, 1, size)   = g2.row(i);
-                  g1x_g2x.block(id, j*size + prOff, 1, size)  -= MatrixX::Ones(1, size);
+                  g1x_g2x.block(id, j*size + prOff, 1, size)  -=
+  MatrixX::Ones(1, size);
           }
   }*/
 
@@ -220,9 +229,10 @@ SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(In wayP
           for(int j =0; j<3; ++j)
           {
                   int id = i + j;
-                  g3x_g4x.block(id, j*size		 , 1, size)   = g3.row(i);
-                  g3x_g4x.block(id, j*size + ptOff, 1, size)   = g4.row(i);
-                  g3x_g4x.block(id, j*size + prptOff, 1, size)  -= MatrixX::Ones(1, size);
+                  g3x_g4x.block(id, j*size		 , 1, size)   =
+  g3.row(i); g3x_g4x.block(id, j*size + ptOff, 1, size)   = g4.row(i);
+                  g3x_g4x.block(id, j*size + prptOff, 1, size)  -=
+  MatrixX::Ones(1, size);
           }
   }
 */
@@ -247,7 +257,8 @@ SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(In wayP
       int id = i + j;
       h3x_h4x.block(id, j * size, 1, size) = h3.row(i % 3);
       h3x_h4x.block(id, j * size + ptOff, 1, size) = h4.row(i % 3);
-      h3x_h4x.block(id, j * size + ptptOff, 1, size) = MatrixX::Ones(1, size) * -2;
+      h3x_h4x.block(id, j * size + ptptOff, 1, size) =
+          MatrixX::Ones(1, size) * -2;
     }
   }
 
@@ -286,14 +297,16 @@ SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(In wayP
   }
 
   // skipping constraints on x and y accelerations for the time being
-  // to compute A i'll create an eigen matrix, then i'll convert it to a sparse one and fill those tables
+  // to compute A i'll create an eigen matrix, then i'll convert it to a sparse
+  // one and fill those tables
 
   // total number of constraints
-  // NOG h2x_h1x (size * Dim) + h3x_h4x (size * Dim ) + g1x_g2x (size * Dim ) + g3x_g4x (size*Dim)
-  // NOG + x0_x0 (Dim ) + x0p_0 (Dim) + xt_xt (Dim)  + xtp_0 (Dim) = 4 * Dim * size + 4 * Dim
-  // h2x_h1x (size * Dim) + h3x_h4x (size * Dim )
-  // + x0_x0 (Dim ) + x0p_0 (Dim) + xt_xt (Dim)  + xtp_0 (Dim) = 2 * Dim * size + 4 * Dim
-  // NOG const MSKint32t numcon = 12 * size + 12;
+  // NOG h2x_h1x (size * Dim) + h3x_h4x (size * Dim ) + g1x_g2x (size * Dim ) +
+  // g3x_g4x (size*Dim) NOG + x0_x0 (Dim ) + x0p_0 (Dim) + xt_xt (Dim)  + xtp_0
+  // (Dim) = 4 * Dim * size + 4 * Dim h2x_h1x (size * Dim) + h3x_h4x (size * Dim
+  // )
+  // + x0_x0 (Dim ) + x0p_0 (Dim) + xt_xt (Dim)  + xtp_0 (Dim) = 2 * Dim * size
+  // + 4 * Dim NOG const MSKint32t numcon = 12 * size + 12;
   const MSKint32t numcon = Dim * 2 * size + 4 * Dim;  // TODO
 
   // this gives us the matrix A of size numcon * numvaar
@@ -427,8 +440,8 @@ SplineOptimizer<Time, Numeric, Dim, Safe, Point>::GenerateOptimizedCurve(In wayP
     if (r == MSK_RES_OK)
       r = MSK_putacol(task, j,             /* Variable (column) index.*/
                       aptre[j] - aptrb[j], /* Number of non-zeros in column j.*/
-                      asub + aptrb[j],     /* Pointer to row indexes of column j.*/
-                      aval + aptrb[j]);    /* Pointer to Values of column j.*/
+                      asub + aptrb[j],  /* Pointer to row indexes of column j.*/
+                      aval + aptrb[j]); /* Pointer to Values of column j.*/
   }
 
   /* Set the bounds on constraints.

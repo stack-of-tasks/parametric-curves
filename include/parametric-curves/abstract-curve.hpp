@@ -39,13 +39,16 @@ struct AbstractCurve {
   ///  \param t : the time when to evaluate the spline
   ///  \param order : order of the derivative
   ///  \param return : the value x(t)
-  virtual const point_t derivate(const time_t& t, const std::size_t& order) const = 0;
+  virtual const point_t derivate(const time_t& t,
+                                 const std::size_t& order) const = 0;
 
  public:
   /*Getters*/
   virtual const time_t tmin() const { return t_min; }
   virtual const time_t tmax() const { return t_max; }
-  virtual bool checkRange(const time_t t) const { return (t >= t_min) && (t <= t_max); }
+  virtual bool checkRange(const time_t t) const {
+    return (t >= t_min) && (t <= t_max);
+  }
 
   /* Setters */
   virtual bool setInitialPoint(const point_t& /*x_init*/) = 0;

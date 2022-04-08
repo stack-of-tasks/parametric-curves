@@ -9,8 +9,8 @@
 #ifndef _parameteric_curves_infinite_constant_acceleration_hpp
 #define _parameteric_curves_infinite_constant_acceleration_hpp
 
-#include <parametric-curves/abstract-curve.hpp>
 #include <cmath>
+#include <parametric-curves/abstract-curve.hpp>
 
 namespace parametriccurves {
 
@@ -18,7 +18,8 @@ namespace parametriccurves {
 /// \brief Creates InfiniteConstAcc curve
 /// s = s_0 + u_0*t+0.5*a_0*t^2
 
-template <typename Numeric = double, Eigen::Index Dim = 1, typename Point = Eigen::Matrix<Numeric, Dim, 1> >
+template <typename Numeric = double, Eigen::Index Dim = 1,
+          typename Point = Eigen::Matrix<Numeric, Dim, 1> >
 struct InfiniteConstAcc : public AbstractCurve<Numeric, Point> {
   typedef Point point_t;
   typedef Numeric time_t;
@@ -29,9 +30,14 @@ struct InfiniteConstAcc : public AbstractCurve<Numeric, Point> {
  public:
   ///\brief Constructor
 
-  InfiniteConstAcc(const time_t& traj_time_, const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
-                   const point_t& x_final_ = Eigen::Matrix<Numeric, Dim, 1>::Zero())
-      : curve_abc_t(-1, -1), traj_time(traj_time_), x_init(x_init_), x_final(x_final_) {}
+  InfiniteConstAcc(
+      const time_t& traj_time_,
+      const point_t& x_init_ = Eigen::Matrix<Numeric, Dim, 1>::Zero(),
+      const point_t& x_final_ = Eigen::Matrix<Numeric, Dim, 1>::Zero())
+      : curve_abc_t(-1, -1),
+        traj_time(traj_time_),
+        x_init(x_init_),
+        x_final(x_final_) {}
 
   ///\brief Destructor
   ~InfiniteConstAcc() {}
@@ -43,14 +49,17 @@ struct InfiniteConstAcc : public AbstractCurve<Numeric, Point> {
     if (t <= 0.5 * traj_time)
       return x_init + 0.5 * m_ddx0 * t * t;
     else if (t > 0.5 * traj_time && t <= 1.5 * traj_time)
-      return (x_init + x_final) / 2 + 0.5 * m_ddx0 * traj_time * (t - 0.5 * traj_time) -
+      return (x_init + x_final) / 2 +
+             0.5 * m_ddx0 * traj_time * (t - 0.5 * traj_time) -
              0.5 * m_ddx0 * (t - 0.5 * traj_time) * (t - 0.5 * traj_time);
     else  //(t>1.5*traj_time && t<=2*traj_time)
-      return (x_init + x_final) / 2 - 0.5 * m_ddx0 * traj_time * (t - 1.5 * traj_time) +
+      return (x_init + x_final) / 2 -
+             0.5 * m_ddx0 * traj_time * (t - 1.5 * traj_time) +
              0.5 * m_ddx0 * (t - 1.5 * traj_time) * (t - 1.5 * traj_time);
   }
 
-  virtual const point_t derivate(const time_t& t_, const std::size_t& order) const {
+  virtual const point_t derivate(const time_t& t_,
+                                 const std::size_t& order) const {
     const time_t t = std::fmod(t_, 2 * traj_time);
     const point_t& m_ddx0 = 4.0 * (x_final - x_init) / (traj_time * traj_time);
     if (order == 1) {
