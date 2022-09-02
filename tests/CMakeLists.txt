@@ -1,6 +1,6 @@
-ADD_UNIT_TEST(spline_tests Main.cpp)
-TARGET_LINK_LIBRARIES(spline_tests ${PROJECT_NAME})
+add_unit_test(spline_tests Main.cpp)
+target_link_libraries(spline_tests ${PROJECT_NAME})
 
-IF(BUILD_PYTHON_INTERFACE)
-  ADD_SUBDIRECTORY(python)
-ENDIF(BUILD_PYTHON_INTERFACE)
+if(BUILD_PYTHON_INTERFACE)
+  add_subdirectory(python)
+endif(BUILD_PYTHON_INTERFACE)

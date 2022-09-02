@@ -1,14 +1,13 @@
-ADD_LIBRARY(${PYWRAP} SHARED spline_python.cpp)
-TARGET_LINK_LIBRARIES(${PYWRAP} eigenpy::eigenpy Boost::serialization)
+add_library(${PYWRAP} SHARED spline_python.cpp)
+target_link_libraries(${PYWRAP} eigenpy::eigenpy Boost::serialization)
 
-SET_TARGET_PROPERTIES(${PYWRAP} PROPERTIES
-  LIBRARY_OUTPUT_DIRECTORY ${PY_NAME})
+set_target_properties(${PYWRAP} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PY_NAME})
 
-IF(APPLE)
+if(APPLE)
   # We need to change the extension for python bindings
-  SET_TARGET_PROPERTIES(${PYWRAP} PROPERTIES SUFFIX ".so")
-ENDIF(APPLE)
+  set_target_properties(${PYWRAP} PROPERTIES SUFFIX ".so")
+endif(APPLE)
 
-INSTALL(TARGETS ${PYWRAP} DESTINATION "${PYTHON_SITELIB}/${PY_NAME}")
+install(TARGETS ${PYWRAP} DESTINATION "${PYTHON_SITELIB}/${PY_NAME}")
 
-PYTHON_INSTALL_ON_SITE(${PY_NAME} "__init__.py")
+python_install_on_site(${PY_NAME} "__init__.py")
