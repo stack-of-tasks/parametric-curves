@@ -1,9 +1,9 @@
-//#include "parametriccurves/bezier_curve.h"
+// #include "parametriccurves/bezier_curve.h"
 #include <parametric-curves/polynomial.hpp>
 #include <parametric-curves/spatial/force-curve.hpp>
 #include <parametric-curves/spline.hpp>
 
-//#include "parametriccurves/splines/spline_deriv_constraint.h"
+// #include "parametriccurves/splines/spline_deriv_constraint.h"
 #include <boost/python.hpp>
 #include <eigenpy/eigenpy.hpp>
 #include <eigenpy/memory.hpp>
