@@ -1,6 +1,5 @@
 # Spline
 
-[![Building Status](https://travis-ci.org/stack-of-tasks/parametric-curves.svg?branch=master)](https://travis-ci.org/stack-of-tasks/parametric-curves)
 [![Pipeline status](https://gitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/pipeline.svg)](https://gitlab.laas.fr/stack-of-tasks/parametric-curves/commits/master)
 [![Coverage report](https://gitlab.laas.fr/stack-of-tasks/parametric-curves/badges/master/coverage.svg?job=doc-coverage)](https://gepettoweb.laas.fr/doc/stack-of-tasks/parametric-curves/master/coverage/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
