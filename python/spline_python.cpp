@@ -244,7 +244,7 @@ void set_end_acc(curve_constraints_t& c, const point_t& val) {
 
 BOOST_PYTHON_MODULE(libparametric_curves_pywrap) {
   /** BEGIN eigenpy init**/
-  // eigenpy::enableEigenPy();
+  bp::import("eigenpy");
 
   eigenpy::enableEigenPySpecific<point_t>();
   eigenpy::enableEigenPySpecific<ret_point_t>();
