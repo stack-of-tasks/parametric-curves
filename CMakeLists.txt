@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.14)
 
 # Project properties
 set(PROJECT_ORG stack-of-tasks)
@@ -20,9 +20,22 @@ set(CUSTOM_HEADER_DIR ${PROJECT_NAME})
 set(CXX_DISABLE_WERROR TRUE)
 set(DOXYGEN_USE_MATHJAX YES)
 
-# JRL-cmakemodule setup
-include(cmake/base.cmake)
-include(cmake/boost.cmake)
+# Check if the submodule cmake have been initialized
+set(JRL_CMAKE_MODULES "${CMAKE_CURRENT_LIST_DIR}/cmake")
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/cmake/base.cmake")
+  message(STATUS "JRL cmakemodules not found. Let's fetch it.")
+  include(FetchContent)
+  FetchContent_Declare(
+    "jrl-cmakemodules"
+    GIT_REPOSITORY "https://github.com/jrl-umi3218/jrl-cmakemodules.git")
+  FetchContent_MakeAvailable("jrl-cmakemodules")
+  FetchContent_GetProperties("jrl-cmakemodules" SOURCE_DIR JRL_CMAKE_MODULES)
+endif()
+
+include("${JRL_CMAKE_MODULES}/base.cmake")
+include("${JRL_CMAKE_MODULES}/boost.cmake")
+
+set_default_cmake_build_type("RelWithDebInfo")
 
 # Project definition
 compute_project_args(PROJECT_ARGS LANGUAGES CXX)
