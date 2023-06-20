@@ -44,6 +44,7 @@ project(${PROJECT_NAME} ${PROJECT_ARGS})
 # Project dependencies
 if(BUILD_PYTHON_INTERFACE)
   add_project_dependency(eigenpy 2.7.12 REQUIRED)
+    include("${JRL_CMAKE_MODULES}/python.cmake")
 endif(BUILD_PYTHON_INTERFACE)
 
 add_project_dependency(Eigen3 REQUIRED)
