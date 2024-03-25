@@ -95,16 +95,16 @@ struct ForceCurve
   friend class boost::serialization::access;
   template <class Archive>
   void save(Archive& ar, const unsigned int /*version*/) const {
-    ar& linPart;
-    ar& angPart;
+    ar & linPart;
+    ar & angPart;
 
     return;
   }
 
   template <class Archive>
   void load(Archive& ar, const unsigned int /*version*/) {
-    ar& linPart;
-    ar& angPart;
+    ar & linPart;
+    ar & angPart;
 
     motionVector = motion_t::Zero();
     this->t_min = linPart.tmin();
