@@ -351,14 +351,14 @@ struct Spline : public AbstractCurve<Numeric, Point> {
   friend class boost::serialization::access;
   template <class Archive>
   void save(Archive& ar, const unsigned int /*version*/) const {
-    ar& subSplines_;
+    ar & subSplines_;
 
     return;
   }
 
   template <class Archive>
   void load(Archive& ar, const unsigned int /*version*/) {
-    ar& subSplines_;
+    ar & subSplines_;
 
     this->t_min = subSplines_.front().tmin();
     this->t_max = subSplines_.back().tmax();
