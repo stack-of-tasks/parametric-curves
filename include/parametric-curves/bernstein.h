@@ -47,7 +47,7 @@ struct Bern {
 
   Numeric operator()(const Numeric u) const {
     assert(u >= 0. && u <= 1.);
-    return bin_m_i_ * (pow(u, i_)) * pow((1 - u), m_minus_i);
+    return bin_m_i_ * (pow(u, i_))*pow((1 - u), m_minus_i);
   }
 
   Numeric m_minus_i;
